@@ -1,0 +1,51 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  ocgate:
+    image: oc-gate
+    container_name: oc-gate
+    build:
+      context: .
+      dockerfile: oc-gate/Dockerfile
+    ports:
+      - 5100:5100
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+  microsvcweatherreport:
+    image: microsvc-weather
+    container_name: microsvc-weather
+    build:
+      context: .
+      dockerfile: microsvc-weather/Dockerfile
+    ports:
+      - 5101:5101
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+  
+  microsvcfilemeta:
+    image: microsvc-filemeta
+    container_name: microsvc-filemeta
+    build:
+      context: .
+      dockerfile: microsvc-filemeta/Dockerfile
+    ports:
+      - 5102:5102
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+  seq:
+    image: datalust/seq:latest
+    container_name: nexlog
+    ports:
+      - 5109:80
+    environment:
+      - ACCEPT_EULA=Y
