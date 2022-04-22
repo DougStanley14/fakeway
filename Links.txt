@@ -1,0 +1,1 @@
+KeyCloak - http://localhost:8080/auth/admin/master/console/#/realms/master
