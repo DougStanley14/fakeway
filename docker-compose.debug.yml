@@ -49,3 +49,15 @@ services:
       - 5109:80
     environment:
       - ACCEPT_EULA=Y
+  client:
+    build:
+      context: ngclient
+      # dockerfile: ngclient/Dockerfile
+      target: development
+    command: ["npm", "run", "debug:client"]
+    container_name: client
+    ports:
+      - '4200:4200'
+    volumes:
+      - './client/src:/var/build/client/src'
+      - './shared/src:/var/build/shared/src'

@@ -1,0 +1,17 @@
+{
+  "name": "ngclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "debug:server": "npm run debug -C server",
+    "debug:client": "npm run debug -C client",
+    "postinstall": "npm install -C client && npm install -C server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tslib": "^2.4.0"
+  }
+}
