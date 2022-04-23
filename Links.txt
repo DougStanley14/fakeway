@@ -1,1 +1,5 @@
-KeyCloak - http://localhost:8080/auth/admin/master/console/#/realms/master
+KeyCloak				- http://localhost:8080/auth/admin/master/console/#/realms/master
+KeyCloak				- http://localhost:8080/auth/admin/master/console/#/realms/fakedds/clients
+OC Gateway Weather		- http://localhost:5100/api/Weather				
+
+
