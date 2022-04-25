@@ -1,3 +1,6 @@
+using Serilog;
+using Serilog.Events;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Host.UseSerilog((ctx, lc) => lc
+            .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)  // TODO: Integrate with Config File
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.Seq("http://nexlog:5109/"));
 
 var app = builder.Build();
 

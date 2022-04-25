@@ -22,7 +22,7 @@ try
             .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
             .Enrich.FromLogContext()
             .WriteTo.Console()
-            .WriteTo.Seq("http://localhost:5109/");   // TODO: Put in Config File
+            .WriteTo.Seq("http://nexlog:5109/");   // TODO: Put in Config File
            })
         .ConfigureAppConfiguration((hostingContext, config) =>
         {
