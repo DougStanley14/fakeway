@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "microsvc-weather", "microsvc-weather\microsvc-weather.csproj", "{85416674-694F-4373-AE70-08ECC21BAFC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "microsvc-weather", "microsvc-weather\microsvc-weather.csproj", "{85416674-694F-4373-AE70-08ECC21BAFC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "microsvc-filemeta", "microsvc-filemeta\microsvc-filemeta.csproj", "{6A9F9B7C-EA38-4CA1-8624-E594785C924E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "microsvc-filemeta", "microsvc-filemeta\microsvc-filemeta.csproj", "{6A9F9B7C-EA38-4CA1-8624-E594785C924E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oc-gate", "oc-gate\oc-gate.csproj", "{D7C9362D-D60D-43D3-93E4-C58B5310A4DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "oc-gate", "oc-gate\oc-gate.csproj", "{D7C9362D-D60D-43D3-93E4-C58B5310A4DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "microsvc-authr", "microsvc-authr\microsvc-authr.csproj", "{BDA4A058-F26F-44FF-9959-66DFE5F49BE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "microrsvc-grpctest1", "microrsvc-grpctest1\microrsvc-grpctest1.csproj", "{F0C717F5-90C8-46A4-902E-C40A3885B404}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{D7C9362D-D60D-43D3-93E4-C58B5310A4DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7C9362D-D60D-43D3-93E4-C58B5310A4DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7C9362D-D60D-43D3-93E4-C58B5310A4DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDA4A058-F26F-44FF-9959-66DFE5F49BE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDA4A058-F26F-44FF-9959-66DFE5F49BE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDA4A058-F26F-44FF-9959-66DFE5F49BE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDA4A058-F26F-44FF-9959-66DFE5F49BE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0C717F5-90C8-46A4-902E-C40A3885B404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0C717F5-90C8-46A4-902E-C40A3885B404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0C717F5-90C8-46A4-902E-C40A3885B404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0C717F5-90C8-46A4-902E-C40A3885B404}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
