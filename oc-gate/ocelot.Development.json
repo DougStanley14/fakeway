@@ -23,6 +23,18 @@
       ],
       "UpstreamPathTemplate": "/api/Files/{everything}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/authrmeta/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "microsvc-authr",
+          "Port": 5103
+        }
+      ],
+      "UpstreamPathTemplate": "/api/AuthR/{id}",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {

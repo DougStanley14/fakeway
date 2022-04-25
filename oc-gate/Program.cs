@@ -18,8 +18,8 @@ try
         .UseSerilog((_, config) =>
         {
            config
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
+            .MinimumLevel.Verbose()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .WriteTo.Seq("http://nexlog:5109/");   // TODO: Put in Config File

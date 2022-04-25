@@ -6,8 +6,8 @@ using Serilog.Events;
 using System.Security.Claims;
 
 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)  // Throttles EF Logging
+                    .MinimumLevel.Verbose()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
                     .Enrich.FromLogContext()
                     .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
                     .WriteTo.Console()
@@ -34,9 +34,9 @@ try
 
         o.Authority = builder.Configuration["Jwt:Authority"];
         o.Audience = builder.Configuration["Jwt:Audience"];
-    //o.Authority = Configuration["Jwt:Authority"];
-    //o.Audience = Configuration["Jwt:Audience"];
-    o.RequireHttpsMetadata = false;
+        //o.Authority = Configuration["Jwt:Authority"];
+        //o.Audience = Configuration["Jwt:Audience"];
+        o.RequireHttpsMetadata = false;
         o.TokenValidationParameters = new TokenValidationParameters
         {
             RoleClaimType = ClaimTypes.Role
@@ -62,8 +62,8 @@ try
     });
 
     builder.Host.UseSerilog((ctx, lc) => lc
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)  // TODO: Integrate with Config File
+                .MinimumLevel.Verbose()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.Seq("http://nexlog:5109/"));
