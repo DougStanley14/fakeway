@@ -3,9 +3,9 @@
   "profiles": {
     "microsvc_weather": {
       "commandName": "Project",
-      "launchBrowser": true,
+      // "launchBrowser": true,
       // "launchUrl": "swagger", 
-      "launchUrl": "WeatherForecast",
+      // "launchUrl": "WeatherForecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -65,8 +65,8 @@ try
                 .MinimumLevel.Verbose()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq("http://nexlog:5109/"));
+                .WriteTo.Console());
+                //.WriteTo.Seq("http://nexlog:5109/"));
 
     var app = builder.Build();
 

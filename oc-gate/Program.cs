@@ -17,12 +17,12 @@ try
         .UseContentRoot(Directory.GetCurrentDirectory())
         .UseSerilog((_, config) =>
         {
-           config
-            .MinimumLevel.Verbose()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.Seq("http://nexlog:5109/");   // TODO: Put in Config File
+            config
+             .MinimumLevel.Verbose()
+             .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
+             .Enrich.FromLogContext()
+             .WriteTo.Console();
+            //.WriteTo.Seq("http://nexlog:5109/");   // TODO: Put in Config File
            })
         .ConfigureAppConfiguration((hostingContext, config) =>
         {

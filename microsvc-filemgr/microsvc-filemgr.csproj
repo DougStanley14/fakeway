@@ -4,9 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>microsvc_authr</RootNamespace>
-    <UserSecretsId>b8028185-91b9-4ed1-8846-b8e309d8be71</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <RootNamespace>microsvc_filemgr</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

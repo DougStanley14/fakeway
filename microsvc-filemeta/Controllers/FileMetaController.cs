@@ -22,7 +22,7 @@ namespace microsvc_filemeta.Controllers
             {
                 new FileStuff {FileName ="File1.doc",        Size=8983983},
                 new FileStuff {FileName ="Another File.doc", Size=444},
-                new FileStuff {FileName ="Third File.doc",        Size=8983983},
+                new FileStuff {FileName ="Third File.doc",   Size=8983983},
                 new FileStuff {FileName ="File4.doc",        Size=8983983},
             };
         }
