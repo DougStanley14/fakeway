@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "d6ae9f49-fe2d-4a69-a3bd-eb1d4c3a3e01",
+		"name": "Ocelot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GW Weather",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5100/api/Weather",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"Weather"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GW FileMeta Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5100//api/Files",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"",
+						"api",
+						"Files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GW FileMeta Get w/ ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5100/api/Files/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"Files",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GW FileMeta Delete w/ ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5100/api/Files/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"Files",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GW FileMeta Post w/ Value",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "value",
+							"value": "This is a new Post Value",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/Files",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"Files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GW FileMeta Put w/ Id-Value",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "value",
+							"value": "Value to be Put in Place of",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/Files/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"Files",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
