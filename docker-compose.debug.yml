@@ -7,6 +7,20 @@ volumes:
       driver: local
 
 services:
+  gate1:
+    image: gate1
+    container_name: gate1
+    build: ./gate1
+    ports:
+        - '5901:80'
+        - '5900:443'
+    environment:
+        - ASPNETCORE_URLS=https://+;http://+
+        # - ASPNETCORE_HTTPS_PORT=5900
+        - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+        - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
+        - '${USERPROFILE}\.aspnet\https:/root/.aspnet/https/'
   ocgate:
     image: oc-gate
     container_name: oc-gate

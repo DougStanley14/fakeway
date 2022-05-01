@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace microsvc_filemeta.Controllers
+namespace microsvc_Mega.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FileMetaController : ControllerBase
+    public class MegaController : ControllerBase
     {
-        private readonly ILogger<FileMetaController> _lgr;
+        private readonly ILogger<MegaController> _lgr;
 
-        public FileMetaController(ILogger<FileMetaController> logger)
+        public MegaController(ILogger<MegaController> logger)
         {
             _lgr = logger;
         }
@@ -17,7 +17,7 @@ namespace microsvc_filemeta.Controllers
         [HttpGet]
         public IEnumerable<FileStuff> Get()
         {
-            _lgr.LogInformation("Getting File Stuff");
+            _lgr.LogInformation("Mega Getting File Stuff");
             return new List<FileStuff>
             {
                 new FileStuff {FileName ="File1.doc",        Size=8983983},
@@ -30,29 +30,22 @@ namespace microsvc_filemeta.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return $"Get: {id}";
+            return $"Mega Get: {id}";
         }
         [HttpPost]
         public string Post([FromForm] string value)
         {
-            return $"Post:{value}";
+            return $"Mega Post:{value}";
         }
         [HttpPut("{id}")]
         public string Put(int id, [FromForm] string value)
         {
-            return $"Put:{id}:{value}";
+            return $"Mega Put:{id}:{value}";
         }
         [HttpDelete("{id}")]
         public string Delete(int id)
         {
-            return $"Delete:{id}";
+            return $"Mega Delete:{id}";
         }
     }
-
-
-}
-public class FileStuff
-{
-    public string FileName { get; set; }
-    public int Size { get; set; }
 }
