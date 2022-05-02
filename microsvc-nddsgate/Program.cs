@@ -1,43 +1,57 @@
-var builder = WebApplication.CreateBuilder(args);
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
+using Serilog;
+using Serilog.Events;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-var app = builder.Build();
+Log.Information("Starting up Ocelot Gateway");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // TODO: Rewrite with newer (.net 6) Builder
+    new WebHostBuilder()
+        .UseKestrel()
+        .UseContentRoot(Directory.GetCurrentDirectory())
+        .UseSerilog((_, config) =>
+        {
+            config
+             .MinimumLevel.Verbose()
+             .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
+             .Enrich.FromLogContext()
+             .WriteTo.Console();
+        })
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            config
+                .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                .AddJsonFile($"ocelot.{hostingContext.HostingEnvironment.EnvironmentName}.json")
+                .AddEnvironmentVariables();
+        })
+        .ConfigureServices(s =>
+        {
+            s.AddOcelot();
+        })
+        .UseIISIntegration()
+        .Configure(app =>
+        {
+            //app.UseMiddleware<RequestResponseLoggingMiddleware>(); //https://www.abhith.net/blog/dotnet-core-api-gateway-ocelot-logging-http-requests-response-including-headers-body/
+            app.UseOcelot().Wait();
+            app.UseSerilogRequestLogging(); // May be replacement for above
+        })
+        .Build()
+        .Run();
 }
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
+catch (Exception ex)
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
+    Log.Fatal(ex, "Ocelot Gateway - Unhandled exception");
+}
+finally
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-       new WeatherForecast
-       (
-           DateTime.Now.AddDays(index),
-           Random.Shared.Next(-20, 55),
-           summaries[Random.Shared.Next(summaries.Length)]
-       ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    Log.Information("Ocelot Gateway Shut down complete");
+    Log.CloseAndFlush();
 }

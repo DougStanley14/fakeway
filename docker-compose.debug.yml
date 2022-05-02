@@ -7,33 +7,22 @@ volumes:
       driver: local
 
 services:
-  gate1:
-    image: gate1
-    container_name: gate1
-    build: ./gate1
+  microsvc-gate:
+    image: microsvc-gate
+    container_name: microsvc-gate
+    build: ./microsvc-gate
     ports:
-        - '5901:80'
-        - '5900:443'
+        - '5101:80'
+        - '5100:443'
     environment:
         - ASPNETCORE_URLS=https://+;http://+
-        # - ASPNETCORE_HTTPS_PORT=5900
+        - ASPNETCORE_HTTPS_PORT=5100
         - ASPNETCORE_ENVIRONMENT=Development
+        # - ASPNETCORE_Kestrel__Certificates__Default__Password=noonan
+        # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/microsvc-gate.pfx  
     volumes:
         - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
         - '${USERPROFILE}\.aspnet\https:/root/.aspnet/https/'
-  ocgate:
-    image: oc-gate
-    container_name: oc-gate
-    build:
-      context: .
-      dockerfile: oc-gate/Dockerfile
-    ports:
-      - 5100:5100
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - ~/.vsdbg:/remote_debugger:rw
-
   microsvcweatherreport:
     image: microsvc-weather
     container_name: microsvc-weather
@@ -94,4 +83,48 @@ services:
         - 8080:8080
       depends_on:
         - postgres
+
+        
+  # microsvc-nddsgate:
+  #   image: microsvc-nddsgate
+  #   container_name: microsvc-nddsgate
+  #   build: ./microsvc-nddsgate
+  #   ports:
+  #       - '5101:80'
+  #       - '5100:443'
+  #   environment:
+  #       - ASPNETCORE_URLS=https://+;http://+
+  #       - ASPNETCORE_HTTPS_PORT=5100
+  #       - ASPNETCORE_ENVIRONMENT=Development
+  #   volumes:
+  #       - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
+  #       - '${USERPROFILE}\.aspnet\https:/root/.aspnet/https/'
+  # gate1:
+  #   image: gate1
+  #   container_name: gate1
+  #   build: ./gate1
+  #   ports:
+  #       - '5901:80'
+  #       - '5900:443'
+  #   environment:
+  #       - ASPNETCORE_URLS=https://+;http://+
+  #       # - ASPNETCORE_HTTPS_PORT=5900
+  #       - ASPNETCORE_ENVIRONMENT=Development
+  #   volumes:
+  #       - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
+  #       - '${USERPROFILE}\.aspnet\https:/root/.aspnet/https/'
+  # ocgate:
+  #   image: oc-gate
+  #   container_name: oc-gate
+  #   build:
+  #     context: .
+  #     dockerfile: oc-gate/Dockerfile
+  #   ports:
+  #     - 5100:5100
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #   volumes:
+  #     - ~/.vsdbg:/remote_debugger:rw
+
+
 
