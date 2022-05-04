@@ -15,14 +15,30 @@ services:
         - '5101:80'
         - '5100:443'
     environment:
-        - ASPNETCORE_URLS=https://+;http://+
-        - ASPNETCORE_HTTPS_PORT=5100
-        - ASPNETCORE_ENVIRONMENT=Development
-        # - ASPNETCORE_Kestrel__Certificates__Default__Password=noonan
-        # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/microsvc-gate.pfx  
+    #     - ASPNETCORE_URLS=https://+;http://+
+    #     - ASPNETCORE_HTTPS_PORT=5100
+        - ASPNETCORE_ENVIRONMENT=docker-dev
+    #     - ASPNETCORE_Kestrel__Certificates__Default__Password=noonan
+    #     - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/microsvc-gate.pfx  
     volumes:
         - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
         - '${USERPROFILE}\.aspnet\https:/root/.aspnet/https/'
+  # microsvc-gate:
+  #   image: microsvc-gate
+  #   container_name: microsvc-gate
+  #   build: ./microsvc-gate
+  #   ports:
+  #       - '5101:80'
+  #       - '5100:443'
+  #   environment:
+  #       - ASPNETCORE_URLS=https://+;http://+
+  #       - ASPNETCORE_HTTPS_PORT=5100
+  #       - ASPNETCORE_ENVIRONMENT=Development
+  #       # - ASPNETCORE_Kestrel__Certificates__Default__Password=noonan
+  #       # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/microsvc-gate.pfx  
+  #   volumes:
+  #       - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
+  #       - '${USERPROFILE}\.aspnet\https:/root/.aspnet/https/'
   microsvcweatherreport:
     image: microsvc-weather
     container_name: microsvc-weather
@@ -84,7 +100,7 @@ services:
       depends_on:
         - postgres
 
-        
+
   # microsvc-nddsgate:
   #   image: microsvc-nddsgate
   #   container_name: microsvc-nddsgate

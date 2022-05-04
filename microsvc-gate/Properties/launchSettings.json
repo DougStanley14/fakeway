@@ -1,38 +1,24 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:45142",
-      "sslPort": 44367
-    }
-  },
   "profiles": {
     "microsvc_gate": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
+      //"launchBrowser": true,
+      //"launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:7205;http://localhost:5205",
       "dotnetRunMessages": true
     },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
+    "docker-dev": {
+      "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true,
-      "useSSL": true
+        "ASPNETCORE_ENVIRONMENT": "docker-dev",
+        "ASPNETCORE_SECRETID": "bed74a4c-a3c1-4910-b948-9fd5b9fab95e",
+        "ASPNETCORE_Kestrel__Certificates__Default__Password": "noonan",
+        "ASPNETCORE_Kestrel__Certificates__Default__Path": "E:\\Repos\\DevCerts\\microsvc-gate.pfx"
+      },
+      "dotnetRunMessages": true
     }
   }
 }
