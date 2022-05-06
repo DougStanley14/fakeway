@@ -39,7 +39,8 @@ try
         o.RequireHttpsMetadata = false;
         o.TokenValidationParameters = new TokenValidationParameters
         {
-            RoleClaimType = ClaimTypes.Role
+            ValidateAudience = false
+            //RoleClaimType = ClaimTypes.Role
         };
 
         o.Events = new JwtBearerEvents
@@ -78,7 +79,7 @@ try
     }
 
     // app.UseHttpsRedirection();
-
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
