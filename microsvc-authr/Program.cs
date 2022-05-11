@@ -1,109 +1,121 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using microsvc_authr;
-using microsvc_authr.IdentModel;
-using OpenIddict.Abstractions;
+using Serilog;
+using Serilog.Events;
+using System.Security.Claims;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Verbose()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
+                    .Enrich.FromLogContext()
+                    .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
+                    .WriteTo.Console()
+                    .CreateLogger();
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<DefaultDbContext>(options =>
+try
 {
-    //options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-    options.UseSqlite("Data Source=demoDb.db");
+    var builder = WebApplication.CreateBuilder(args);
 
-    options.UseOpenIddict();
-});
+    // Add services to the container.
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
-    options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
-    options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
-    // configure more options if necessary...
-});
+    builder.Services.AddControllers();
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddScoped<ITokenBuilder, TokenBuilder>();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-builder.Services.AddOpenIddict()
-                .AddCore(options => options.UseEntityFrameworkCore().UseDbContext<DefaultDbContext>())
-                .AddServer(options =>
+    }).AddJwtBearer(o =>
+    {
+
+        o.Authority = builder.Configuration["Jwt:Authority"];
+        o.Audience = builder.Configuration["Jwt:Audience"];
+        o.RequireHttpsMetadata = false;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false
+            //RoleClaimType = ClaimTypes.Role
+        };
+
+        o.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = c =>
+            {
+                Log.Error(c.Exception, "XXX Auth Failed");
+                c.NoResult();
+                c.Response.StatusCode = 500;
+                c.Response.ContentType = "text/plain";
+
+                if (builder.Environment.IsDevelopment())
                 {
-                    // Enable the required endpoints
-                    options.SetTokenEndpointUris("/connect/token");
-                    options.SetUserinfoEndpointUris("/connect/userinfo");
+                    return c.Response.WriteAsync(c.Exception.ToString());
+                }
 
-                    options.AllowPasswordFlow();
-                    options.AllowRefreshTokenFlow();
-                    // Add all auth flows that you want to support
-                    // Supported flows are:
-                    //      - Authorization code flow
-                    //      - Client credentials flow
-                    //      - Device code flow
-                    //      - Implicit flow
-                    //      - Password flow
-                    //      - Refresh token flow
+                return c.Response.WriteAsync("An error occured processing your authentication.");
+            }
+        };
+    });
 
-                    // Custom auth flows are also supported
-                    options.AllowCustomFlow("custom_flow_name");
+    builder.Host.UseSerilog((ctx, lc) => lc
+                .MinimumLevel.Verbose()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
+                .Enrich.FromLogContext()
+                .WriteTo.Console());
+    //.WriteTo.Seq("http://nexlog:5109/"));
 
-                    // Using reference tokens means that the actual access and refresh tokens are stored in the database
-                    // and a token referencing the actual tokens (in the db) is used in the request header.
-                    // The actual tokens are not made public.
-                    options.UseReferenceAccessTokens();
-                    options.UseReferenceRefreshTokens();
+    var app = builder.Build();
 
-                    // Register your scopes
-                    // Scopes are a list of identifiers used to specify what access privileges are requested.
-                    options.RegisterScopes(OpenIddictConstants.Permissions.Scopes.Email,
-                                                OpenIddictConstants.Permissions.Scopes.Profile,
-                                                OpenIddictConstants.Permissions.Scopes.Roles);
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-                    // Set the lifetime of your tokens
-                    options.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
-                    options.SetRefreshTokenLifetime(TimeSpan.FromDays(7));
+    // app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-                    // Register signing and encryption details
-                    options.AddDevelopmentEncryptionCertificate()
-                                    .AddDevelopmentSigningCertificate();
+    app.MapControllers();
 
-                    // Register ASP.NET Core host and configure options
-                    options.UseAspNetCore().EnableTokenEndpointPassthrough();
-                })
-                .AddValidation(options =>
-                {
-                    options.UseLocalServer();
-                    options.UseAspNetCore();
-                });
+    app.Run();
 
-builder.Services.AddAuthentication(options =>
+}
+catch (Exception ex)
 {
-    options.DefaultScheme = OpenIddictConstants.Schemes.Bearer;
-    options.DefaultChallengeScheme = OpenIddictConstants.Schemes.Bearer;
-});
-
-builder.Services.AddIdentity<User, Role>()
-                .AddSignInManager()
-                .AddUserStore<UserStore>()
-                .AddRoleStore<RoleStore>()
-                .AddUserManager<UserManager<User>>();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Fatal(ex, "App Failed to Start");
 }
 
-app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
-app.MapControllers();
+//var builder = WebApplication.CreateBuilder(args);
 
-app.Run();
+//// Add services to the container.
+
+//builder.Services.AddControllers();
+//// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
+
+//var app = builder.Build();
+
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+//app.UseHttpsRedirection();
+
+//app.UseAuthorization();
+
+//app.MapControllers();
+
+//app.Run();
