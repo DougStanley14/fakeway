@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using microsvc_authr;
 using Serilog;
 using Serilog.Events;
+using Serilog.Exceptions;
 using System.Security.Claims;
 
 Log.Logger = new LoggerConfiguration()
@@ -11,8 +12,9 @@ Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
                     .Enrich.FromLogContext()
                     .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
+                    .Enrich.WithExceptionDetails()
                     .WriteTo.Console()
-                    .CreateLogger();
+                    .CreateBootstrapLogger();
 
 try
 {
@@ -66,6 +68,7 @@ try
                 .MinimumLevel.Verbose()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
                 .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
                 .WriteTo.Console());
     //.WriteTo.Seq("http://nexlog:5109/"));
 
@@ -79,6 +82,7 @@ try
     }
 
     // app.UseHttpsRedirection();
+    app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseAuthorization();
 
@@ -91,31 +95,9 @@ catch (Exception ex)
 {
     Log.Fatal(ex, "App Failed to Start");
 }
+finally
+{
+    Log.CloseAndFlush();
+}
 
 
-
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Add services to the container.
-
-//builder.Services.AddControllers();
-//// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
-
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
-//app.MapControllers();
-
-//app.Run();

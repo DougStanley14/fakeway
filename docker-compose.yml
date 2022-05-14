@@ -23,18 +23,20 @@ services:
     volumes:
         - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
         - '${USERPROFILE}\.aspnet\https:/https'
-  microsvcweatherreport:
-    image: microsvc-weather
-    container_name: microsvc-weather
-    build:
-      context: .
-      dockerfile: microsvc-weather/Dockerfile
-    ports:
-      - 5101:5101
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - ~/.vsdbg:/remote_debugger:rw
+
+        
+  # microsvcweatherreport:
+  #   image: microsvc-weather
+  #   container_name: microsvc-weather
+  #   build:
+  #     context: .
+  #     dockerfile: microsvc-weather/Dockerfile
+  #   ports:
+  #     - 5101:5101
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #   volumes:
+  #     - ~/.vsdbg:/remote_debugger:rw
   
   microsvcfilemeta:
     image: microsvc-filemeta
