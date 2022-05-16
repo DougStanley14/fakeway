@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -91,8 +92,11 @@ try
             },
             OnTokenValidated = c =>
             {
-                Log.Information("JWT Validated {@token}", c.SecurityToken);
-                Log.Information("Request Heads {@heads}", c.HttpContext.Request.Headers);
+                //Log.Information("JWT Validated {@token}", c.SecurityToken);
+
+                var claims = ((JwtSecurityToken)c.SecurityToken).Claims.ToList();
+
+                claims.ForEach(c => Log.Information("Claim {@claimpair}", new { c.Type, c.Value }));
 
                 return Task.CompletedTask;
             }

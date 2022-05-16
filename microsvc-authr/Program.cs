@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using microsvc_authr;
+using microsvc_authr.Data;
+using microsvc_authr.Data.Seeders;
+using microsvc_authr.Services;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using System;
 using System.Security.Claims;
 
 Log.Logger = new LoggerConfiguration()
@@ -20,14 +25,13 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
-
     builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddDbContext<NddsAuthRContext>(opt => opt.UseInMemoryDatabase("AuthInMem"));
     builder.Services.AddScoped<ITokenBuilder, TokenBuilder>();
     builder.Services.AddSwaggerGen();
     builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
+    builder.Services.AddTransient<IUserProfileService, UserProfileService>();
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,13 +40,12 @@ try
     }).AddJwtBearer(o =>
     {
 
-        o.Authority = builder.Configuration["Jwt:Authority"];
-        o.Audience = builder.Configuration["Jwt:Audience"];
+        o.Authority = builder.Configuration["Jwt:Authority"]; // Currently From KeyCloak
+        o.Audience = builder.Configuration["Jwt:Audience"];   // Currently From KeyCloak
         o.RequireHttpsMetadata = false;
         o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false
-            //RoleClaimType = ClaimTypes.Role
         };
 
         o.Events = new JwtBearerEvents
@@ -70,7 +73,6 @@ try
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console());
-    //.WriteTo.Seq("http://nexlog:5109/"));
 
     var app = builder.Build();
 
@@ -85,8 +87,15 @@ try
     app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseAuthorization();
-
     app.MapControllers();
+
+    // Seed InMem DB
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<NddsAuthRContext>();
+        InMemSeeder.Initialize(services);
+    }
 
     app.Run();
 
@@ -100,4 +109,23 @@ finally
     Log.CloseAndFlush();
 }
 
+public class InMemSeeder
+{
+    public static void Initialize(IServiceProvider serviceProvider)
+    {
+        using (var db = new NddsAuthRContext(
+            serviceProvider.GetRequiredService<DbContextOptions<NddsAuthRContext>>()))
+        {
+            // Look for any board games.
+            if (db.Users.Any())
+            {
+                return;   // Data was already seeded
+            }
 
+            db.Users.AddRange(LookupSeeds.NddsUsers());
+            db.SecurityGroups.AddRange(LookupSeeds.SecurityGroups());
+
+            db.SaveChanges();
+        }
+    }
+}

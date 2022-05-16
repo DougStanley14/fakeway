@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using microsvc_authr.Model;
+using microsvc_authr.Services;
 
 namespace microsvc_authr.Controllers
 {
@@ -10,12 +12,17 @@ namespace microsvc_authr.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly ILogger<AuthorizationController> _lgr;
+        private readonly IUserProfileService _usvc;
         private readonly ITokenBuilder _tokenBuilder;
         private readonly IConfiguration _config;
 
-        public AuthorizationController(ILogger<AuthorizationController> logger, ITokenBuilder tokenBuilder, IConfiguration configuration)
+        public AuthorizationController(IUserProfileService userSvc,
+                                       ILogger<AuthorizationController> logger, 
+                                       ITokenBuilder tokenBuilder, 
+                                       IConfiguration configuration)
         {
             _lgr = logger;
+            _usvc = userSvc;
             _tokenBuilder = tokenBuilder;
             _config = configuration;
         }
@@ -30,8 +37,9 @@ namespace microsvc_authr.Controllers
             var claims = User.Claims;
 
             var edipi = claims.Where(c => c.Type == "edipi").Select(x => x.Value).FirstOrDefault();
+            var username = User.FindFirst("preferred_username")?.Value;
 
-            _lgr.LogDebug($"User {User.FindFirst("preferred_username")?.Value} is authenticated with EDIPI : {edipi}");
+            _lgr.LogDebug($"User {username} is authenticated with EDIPI : {edipi}");
 
             //if (dbUser == null)
             //{
@@ -47,16 +55,28 @@ namespace microsvc_authr.Controllers
             //    return BadRequest("Could not authenticate user.");
             //}
 
-            var token = _tokenBuilder.BuildToken(sskeysecret,edipi);
+            var token = _tokenBuilder.BuildToken(sskeysecret, username, edipi);
 
             return Ok(token);
         }
 
 
-        [HttpGet("verify")]
-        public async Task<IActionResult> VerifyToken()
+        [HttpGet("AllUsers")]
+        public async Task<ActionResult<List<NddsUser>>> AllUsers()
         {
-            return NoContent();
+            return _usvc.AllUsers();
+        }
+
+        [HttpGet("SecurityGroups")]
+        public async Task<ActionResult<List<SecurityGroup>>> AllSecurityGroups()
+        {
+            return _usvc.AllSecurityGroups();
+        }
+
+        [HttpGet("SecurityGroupsNames")]
+        public async Task<ActionResult<List<string>>> AllSecurityGroupsNames()
+        {
+            return _usvc.AllSecurityGroupNames();
         }
     }
 }

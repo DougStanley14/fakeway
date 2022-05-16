@@ -5,6 +5,8 @@ version: '3.4'
 volumes:
   postgres_data:
       driver: local
+  authr_data:
+      driver: local
 
 services:
   microsvc-gate:
@@ -24,19 +26,18 @@ services:
         - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
         - '${USERPROFILE}\.aspnet\https:/https'
 
-        
-  # microsvcweatherreport:
-  #   image: microsvc-weather
-  #   container_name: microsvc-weather
-  #   build:
-  #     context: .
-  #     dockerfile: microsvc-weather/Dockerfile
-  #   ports:
-  #     - 5101:5101
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #   volumes:
-  #     - ~/.vsdbg:/remote_debugger:rw
+  authrdb:
+      image: postgres
+      container_name: authrdb
+      ports:
+       - 5433:5433
+      volumes:
+        - authr_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: nddsauthr
+        POSTGRES_USER: authr
+        POSTGRES_PASSWORD: authr
+      command: -p 5433
   
   microsvcfilemeta:
     image: microsvc-filemeta
