@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using microsvc_authr.Data;
 using microsvc_authr.Model;
 
@@ -7,7 +8,7 @@ namespace microsvc_authr.Services
     public interface IUserProfileService
     {
         List<NddsUser> AllUsers();
-        NddsUser GetUser(long edipi);
+        Task<NddsUser> GetUser(long edipi);
         List<SecurityGroup> AllSecurityGroups();
         List<String> AllSecurityGroupNames();
     }
@@ -47,9 +48,13 @@ namespace microsvc_authr.Services
             return users;
         }
 
-        public NddsUser GetUser(long edipi)
+        public async Task<NddsUser> GetUser(long edipi)
         {
-            var usr = _db.Users.FirstOrDefault(u => u.EDIPI == edipi);
+            var usr = await _db.Users
+                               .Include(u => u.SecurityGroups)
+                                  .ThenInclude(s => s.SecurityGroup)
+                               .Where(u => u.EDIPI == edipi)
+                               .SingleOrDefaultAsync();
 
             return usr;
         }

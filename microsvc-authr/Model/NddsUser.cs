@@ -15,6 +15,10 @@ namespace microsvc_authr.Model
         [MaxLength(20)]
         public string UserName { get; set; }
 
+        public bool IsProducer { get; set; }
+
+        public bool IsConsumer { get; set; }
+
         //[MaxLength(50)]
         //public string FirstName { get; set; }
 
@@ -37,10 +41,6 @@ namespace microsvc_authr.Model
             builder.ToTable("NddsUsers");
             builder.HasIndex(e => e.Id);
             builder.HasIndex(e => e.EDIPI);
-
-            builder.HasMany(e => e.SecurityGroups)
-                   .WithOne(s => s.User)
-                   .HasForeignKey(s => s.NddsUserId);
 
         }
     }

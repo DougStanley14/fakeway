@@ -15,7 +15,7 @@ namespace microsvc_authr.Model
         public string WingMaw { get; set; }
         public string WingMawCode { get; set; }
         public DateTime QtrEndDate { get; set; }
-        public virtual ICollection<NddsUser> SecurityGroupUsers { get; set; }
+        public virtual ICollection<UserSecurityGroup> SecurityGroupUsers { get; set; }
     }
 
     public class SecurityGroupConfig : IEntityTypeConfiguration<SecurityGroup>

@@ -124,7 +124,9 @@ public class InMemSeeder
 
             db.Users.AddRange(LookupSeeds.NddsUsers());
             db.SecurityGroups.AddRange(LookupSeeds.SecurityGroups());
+            db.SaveChanges();
 
+            db.UserSecurityGroups.AddRange(LookupSeeds.UserSecurityGroups());
             db.SaveChanges();
         }
     }

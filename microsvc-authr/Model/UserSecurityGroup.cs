@@ -18,17 +18,13 @@ namespace microsvc_authr.Model
             builder.ToTable("UserSecurityGroups");
             builder.HasKey(ur => new { ur.NddsUserId, ur.SecurityGroupId });
 
-            builder.HasOne(ur => ur.User)
-                    .WithMany(r => r.SecurityGroups)
-                    .HasForeignKey(ur => ur.NddsUserId);
+            builder.HasOne(a => a.User)
+                   .WithMany(b => b.SecurityGroups)
+                   .HasForeignKey(c => c.NddsUserId);
 
-            //builder.HasOne(r => r.SecurityGroup)
-            //       .WithMany(x => x.SecurityGroupUsers)
-            //       .HasForeignKey(x => x.SecurityGroupId);
-
-            //builder.HasOne(ur => ur.SecurityGroup)
-            //        .WithMany(ur => ur.Users)
-            //        .HasForeignKey(ur => ur.SecurityGroupId);
+            builder.HasOne(a => a.SecurityGroup)
+                   .WithMany(b => b.SecurityGroupUsers)
+                   .HasForeignKey(c => c.SecurityGroupId);  
 
         }
     }

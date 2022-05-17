@@ -33,8 +33,8 @@ try
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
     }).AddJwtBearer(o =>
     {
@@ -102,6 +102,13 @@ try
             }
             
         };
+    });
+
+    builder.Services.AddAuthorization(o =>
+    {
+        o.AddPolicy("Producer", policy => policy.RequireClaim("IsProducer", "true"));
+        o.AddPolicy("Consumer", policy => policy.RequireClaim("IsConsumer", bool.TrueString));
+        o.AddPolicy("UserTest1", policy => policy.RequireClaim("preferred_username", "test1"));
     });
 
     builder.Host.UseSerilog((ctx, lc) => lc
