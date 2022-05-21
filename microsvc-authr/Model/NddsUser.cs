@@ -15,9 +15,9 @@ namespace microsvc_authr.Model
         [MaxLength(20)]
         public string UserName { get; set; }
 
-        public bool IsProducer { get; set; }
+        public bool Producer { get; set; }
 
-        public bool IsConsumer { get; set; }
+        public bool Consumer { get; set; }
 
         //[MaxLength(50)]
         //public string FirstName { get; set; }

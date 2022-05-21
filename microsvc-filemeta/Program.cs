@@ -105,9 +105,7 @@ try
     });
 
     builder.Services.AddAuthorization(o =>
-    {
-        o.AddPolicy("Producer", policy => policy.RequireClaim("IsProducer", "true"));
-        o.AddPolicy("Consumer", policy => policy.RequireClaim("IsConsumer", bool.TrueString));
+    {;
         o.AddPolicy("UserTest1", policy => policy.RequireClaim("preferred_username", "test1"));
     });
 

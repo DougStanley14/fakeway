@@ -15,8 +15,8 @@ namespace microsvc_filemeta.Controllers
             _lgr = logger;
         }
 
-        [Authorize(Roles = "IsProducer")]
-        //[Authorize(Policy = "Consumer")]
+        [Authorize(Roles = "Producer")]
+        [Authorize(Policy = "UserTest1")]
         [HttpGet]
         public IEnumerable<FileStuff> Get()
         {

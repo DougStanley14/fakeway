@@ -47,18 +47,10 @@ namespace microsvc_authr
             var claims = new List<Claim> {
                 new Claim("EDIPI", edipi),
                 new Claim("preferred_username", userName ),
-
-                
-                //new Claim("IsProducer",
-                //           user.IsProducer ? bool.TrueString : bool.FalseString,
-                //           ClaimValueTypes.Boolean),
-                //new Claim("IsConsumer",
-                //           user.IsConsumer ? bool.TrueString : bool.FalseString,
-                //           ClaimValueTypes.Boolean),
             };
 
-            if (user.IsProducer) claims.Add(new Claim(ClaimTypes.Role, "IsProducer"));
-            if (user.IsConsumer) claims.Add(new Claim(ClaimTypes.Role, "IsConsumer"));
+            if (user.Producer) claims.Add(new Claim(ClaimTypes.Role, "Producer"));
+            if (user.Consumer) claims.Add(new Claim(ClaimTypes.Role, "Consumer"));
 
 
             var prof = new
