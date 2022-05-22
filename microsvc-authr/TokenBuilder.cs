@@ -59,38 +59,51 @@ namespace microsvc_authr
                 Edipi = user.EDIPI,
                 Grps = user.SecurityGroups.Select(g => new
                 {
-                    g.SecurityGroup.Org,
-                    g.SecurityGroup.Buno,
-                    g.SecurityGroup.WingMawCode
+                    g.SecurityGroup.GroupOrg
                 })
             };
 
             _lgr.LogInformation("User Profile {@prof}", prof);
 
-            // TMS
-            user.SecurityGroups.GroupBy(s => s.SecurityGroup.Tms)
-                               .Select(g => g.Key).ToList()
-                               .ForEach(x => claims.Add(new Claim("TMS", x)));
 
-            // TypeModel
-            user.SecurityGroups.GroupBy(s => s.SecurityGroup.TypeModel)
-                               .Select(g => g.Key).ToList()
-                               .ForEach(x => claims.Add(new Claim("TypeModel", x)));
+            foreach (var sg in user.SecurityGroups)
+            {
+                var tms = sg.SecurityGroup
+                            .TMSs
+                            .GroupBy( t => t.Name)
+                            .Select( g => g.Key)
+                            .ToList();
 
-            // Org
-            user.SecurityGroups.GroupBy(s => s.SecurityGroup.Org)
-                               .Select(g => g.Key).ToList()
-                               .ForEach(x => claims.Add(new Claim("Org", x)));
+                var sgname = sg.SecurityGroup.Name;
 
-            // OrgCode
-            user.SecurityGroups.GroupBy(s => s.SecurityGroup.OrgCode)
-                               .Select(g => g.Key).ToList()
-                               .ForEach(x => claims.Add(new Claim("OrgCode", x)));
+                tms.ForEach(t => claims.Add(new Claim("Platform", $"{sgname}:{t}")));
 
-            // Buno
-            user.SecurityGroups.GroupBy(s => s.SecurityGroup.Buno)
-                               .Select(g => g.Key).ToList()
-                               .ForEach(x => claims.Add(new Claim("Buno", x.ToString())));
+            }
+
+            //// TMS
+            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.Tms)
+            //                   .Select(g => g.Key).ToList()
+            //                   .ForEach(x => claims.Add(new Claim("TMS", x)));
+
+            //// TypeModel
+            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.TypeModel)
+            //                   .Select(g => g.Key).ToList()
+            //                   .ForEach(x => claims.Add(new Claim("TypeModel", x)));
+
+            //// Org
+            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.Org)
+            //                   .Select(g => g.Key).ToList()
+            //                   .ForEach(x => claims.Add(new Claim("Org", x)));
+
+            //// OrgCode
+            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.OrgCode)
+            //                   .Select(g => g.Key).ToList()
+            //                   .ForEach(x => claims.Add(new Claim("OrgCode", x)));
+
+            //// Buno
+            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.Buno)
+            //                   .Select(g => g.Key).ToList()
+            //                   .ForEach(x => claims.Add(new Claim("Buno", x.ToString())));
 
 
             return claims;

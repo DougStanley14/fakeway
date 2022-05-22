@@ -68,7 +68,7 @@ namespace microsvc_authr.Controllers
         }
 
         [HttpGet("SecurityGroups")]
-        public async Task<ActionResult<List<SecurityGroup>>> AllSecurityGroups()
+        public async Task<ActionResult<List<SecurityOrgGroup>>> AllSecurityGroups()
         {
             return _usvc.AllSecurityGroups();
         }
@@ -78,5 +78,11 @@ namespace microsvc_authr.Controllers
         {
             return _usvc.AllSecurityGroupNames();
         }
+
+        //[HttpGet("GetUser/{edipi}")]
+        //public async Task<ActionResult<NddsUser>> AllSecurityGroupsNames(long edipi)
+        //{
+        //    return await _usvc.GetUser(edipi);
+        //}
     }
 }

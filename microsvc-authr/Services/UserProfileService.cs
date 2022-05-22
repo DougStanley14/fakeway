@@ -9,7 +9,7 @@ namespace microsvc_authr.Services
     {
         List<NddsUser> AllUsers();
         Task<NddsUser> GetUser(long edipi);
-        List<SecurityGroup> AllSecurityGroups();
+        List<SecurityOrgGroup> AllSecurityGroups();
         List<String> AllSecurityGroupNames();
     }
 
@@ -26,17 +26,17 @@ namespace microsvc_authr.Services
 
         public List<string> AllSecurityGroupNames()
         {
-            var names = _db.SecurityGroups
-                           .GroupBy( s => s.OrgCode)
+            var names = _db.SecurityOrgGroups
+                           .GroupBy( s => s.Name)
                            .Select(g => g.Key)
                            .ToList();
 
             return names;
         }
 
-        public List<SecurityGroup> AllSecurityGroups()
+        public List<SecurityOrgGroup> AllSecurityGroups()
         {
-            var secGrps = _db.SecurityGroups.ToList();
+            var secGrps = _db.SecurityOrgGroups.ToList();
 
             return secGrps;
         }
@@ -53,6 +53,8 @@ namespace microsvc_authr.Services
             var usr = await _db.Users
                                .Include(u => u.SecurityGroups)
                                   .ThenInclude(s => s.SecurityGroup)
+                                    .ThenInclude(sg => sg.TMSs)
+                                        .ThenInclude(t => t.Bunos)
                                .Where(u => u.EDIPI == edipi)
                                .SingleOrDefaultAsync();
 

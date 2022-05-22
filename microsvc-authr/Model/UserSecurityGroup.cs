@@ -8,7 +8,7 @@ namespace microsvc_authr.Model
         public int NddsUserId { get; set; }
         public virtual NddsUser User { get; set; }
         public int SecurityGroupId { get; set; }
-        public virtual SecurityGroup SecurityGroup { get; set; }
+        public virtual SecurityOrgGroup SecurityGroup { get; set; }
     }
 
     public class UserSecurityGroupConfig : IEntityTypeConfiguration<UserSecurityGroup>
