@@ -10,7 +10,7 @@ namespace microsvc_authr.Data.Seeders
             return new List<NddsUser>
             {
                 new NddsUser { Id = i++, EDIPI = 9111111111L, UserName="test1", Consumer=false, Producer=true},
-                new NddsUser { Id = i++, EDIPI = 9222222222L, UserName="test2", Consumer=true,  Producer=false},
+                new NddsUser { Id = i++, EDIPI = 9211111111L, UserName="test2", Consumer=true,  Producer=false},
                 new NddsUser { Id = i++, EDIPI = 9333333333L, UserName="test3", Consumer=true,  Producer=true},
             };
         }

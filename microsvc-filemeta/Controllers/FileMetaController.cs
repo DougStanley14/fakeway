@@ -9,10 +9,13 @@ namespace microsvc_filemeta.Controllers
     public class FileMetaController : ControllerBase
     {
         private readonly ILogger<FileMetaController> _lgr;
+        private readonly IAuthorizationService _authSvc;
 
-        public FileMetaController(ILogger<FileMetaController> logger)
+        public FileMetaController(ILogger<FileMetaController> logger,
+                                  IAuthorizationService authorizationService)
         {
             _lgr = logger;
+            _authSvc = authorizationService;
         }
 
         [Authorize(Roles = "Producer")]
@@ -37,17 +40,30 @@ namespace microsvc_filemeta.Controllers
             return $"Get: {id}";
         }
 
-        [Authorize(Policy = "Producer")]
+        [Authorize(Roles = "Producer")]
         [HttpPost]
-        public string Post([FromForm] string value)
+        public async Task<ActionResult<NDFileMeta>> Post([FromForm] NDFileMeta fileMeta)
         {
-            return $"Post:{value}";
+            var authorizationResult = await _authSvc
+                .AuthorizeAsync(User, fileMeta, "FileMetaTestPolicy");
+
+            if (authorizationResult.Succeeded)
+            {
+                // Actually Post the Data Here
+                return fileMeta;
+            }
+            else
+            {
+                return new ForbidResult();
+            }
+
+            
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, [FromForm] string value)
+        public string Put(int id, [FromForm] string FormVal1)
         {
-            return $"Put:{id}:{value}";
+            return $"Put:{id}:{FormVal1}";
         }
 
         [HttpDelete("{id}")]
@@ -56,11 +72,16 @@ namespace microsvc_filemeta.Controllers
             return $"Delete:{id}";
         }
     }
-
-
 }
 public class FileStuff
 {
     public string FileName { get; set; }
     public int Size { get; set; }
+}
+
+public class NDFileMeta
+{
+    public string FileHash { get; set; }
+    public string UserSecGroup { get; set; }
+    public List<string> Platform { get; set; }
 }

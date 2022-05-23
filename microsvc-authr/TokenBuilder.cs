@@ -59,8 +59,13 @@ namespace microsvc_authr
                 Edipi = user.EDIPI,
                 Grps = user.SecurityGroups.Select(g => new
                 {
-                    g.SecurityGroup.GroupOrg
-                })
+                    g.SecurityGroup.GroupOrg,
+                    g.SecurityGroup.Name,
+                    TMSs = g.SecurityGroup.TMSs.Select(t => new
+                    {
+                        t.Name
+                    }).ToList()
+                }).ToList()
             };
 
             _lgr.LogInformation("User Profile {@prof}", prof);

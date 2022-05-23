@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using microsvc_filemeta.AuthPolicies;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -27,8 +29,8 @@ try
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    //builder.Services.AddScoped<ITokenBuilder, TokenBuilder>();
     builder.Services.AddSwaggerGen();
+
     //builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
     builder.Services.AddAuthentication(options =>
     {
@@ -107,7 +109,13 @@ try
     builder.Services.AddAuthorization(o =>
     {;
         o.AddPolicy("UserTest1", policy => policy.RequireClaim("preferred_username", "test1"));
+
+        o.AddPolicy("FileMetaTestPolicy", policy =>
+            policy.Requirements.Add(new MeetsPlatformRequirement())
+            );
     });
+
+    builder.Services.AddSingleton<IAuthorizationHandler, FileMetaAuthorizationHandler>();
 
     builder.Host.UseSerilog((ctx, lc) => lc
                 .MinimumLevel.Verbose()
