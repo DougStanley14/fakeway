@@ -31,7 +31,8 @@ namespace microsvc_authr.Data
 
                 var recs = records.ToList();
 
-                Platforms = GenPlatforms(recs);
+                Platforms = GenPlatformsAndBunos(recs);
+
 
                 var parid = 1;
                 var orgid = 1;
@@ -63,7 +64,7 @@ namespace microsvc_authr.Data
                                       }).ToList()
                                    }).ToList();
 
-                // Savers Don't Need Keys
+                // Keys are Nuanced becaus of Many to Many Org to Platform Relationship
                 WMSavers = recs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
                                    .Select(wg => new ParentOrg
                                    {
@@ -74,6 +75,7 @@ namespace microsvc_authr.Data
                                       .Select(g => new Organization
                                       {
                                           Name = g.Key.OrgCode,
+                                          OrgType = OrgType.Consumer,
                                           LongName = g.Key.Org,
                                           OrgPlatforms = g.GroupBy(c => c.Tms)
                                                           .Select(tmg => new OrgPlatform
@@ -87,12 +89,21 @@ namespace microsvc_authr.Data
             }
         }
 
-        private List<Platform> GenPlatforms(List<SecurityGroupFlatDump> recs)
+        private List<Platform> GenPlatformsAndBunos(List<SecurityGroupFlatDump> recs)
         {
             var id = 1;
             var plats = recs.GroupBy(r => r.Tms)
-                            .Select(g => new Platform { Id = id++, Name = g.Key })
-                            .ToList();
+                            .Select(g => new Platform { 
+                                Id = id++, 
+                                Name = g.Key,
+                                Bunos = g.Select(t => new Buno
+                                {
+                                    BunoCode = t.Buno,
+                                    Location = t.Location,
+                                    QtrEndDate = t.QtrEndDate,
+                                    PlatformId = id - 1 // offset autoincrement
+                                }).ToList()
+                            }).ToList();
             return plats;
         }
     }

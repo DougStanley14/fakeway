@@ -13,8 +13,8 @@ namespace microsvc_authr.Model
         public int BunoCode { get; set; }
         public string Location { get; set; }
         public DateTime QtrEndDate { get; set; }
-        public int TMSId { get; set; }
-        public virtual Platform TMS { get; set; }
+        public int PlatformId { get; set; }
+        public virtual Platform Platform { get; set; }
     }
     public class BunoConfig : IEntityTypeConfiguration<Buno>
     {
@@ -25,9 +25,9 @@ namespace microsvc_authr.Model
             builder.HasIndex(e => e.BunoCode);
             builder.HasIndex(e => e.QtrEndDate);
 
-            builder.HasOne(d => d.TMS)
+            builder.HasOne(d => d.Platform)
                        .WithMany(p => p.Bunos)
-                       .HasForeignKey(d => d.TMSId)
+                       .HasForeignKey(d => d.PlatformId)
                        .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }

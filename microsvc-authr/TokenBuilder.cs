@@ -49,8 +49,8 @@ namespace microsvc_authr
                 new Claim("preferred_username", userName ),
             };
 
-            if (user.Producer) claims.Add(new Claim(ClaimTypes.Role, "Producer"));
-            if (user.Consumer) claims.Add(new Claim(ClaimTypes.Role, "Consumer"));
+            //if (user.Producer) claims.Add(new Claim(ClaimTypes.Role, "Producer"));
+            //if (user.Consumer) claims.Add(new Claim(ClaimTypes.Role, "Consumer"));
 
 
             var prof = new

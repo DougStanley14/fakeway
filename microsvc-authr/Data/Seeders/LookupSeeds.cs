@@ -9,9 +9,9 @@ namespace microsvc_authr.Data.Seeders
             int i = 1;
             return new List<User>
             {
-                new User { Id = i++, EDIPI = 9111111111L, UserName="test1", Consumer=false, Producer=true},
-                new User { Id = i++, EDIPI = 9211111111L, UserName="test2", Consumer=true,  Producer=false},
-                new User { Id = i++, EDIPI = 9333333333L, UserName="test3", Consumer=true,  Producer=true},
+                new User { Id = i++, EDIPI = 9111111111L, UserName="test1"},
+                new User { Id = i++, EDIPI = 9211111111L, UserName="test2"},
+                new User { Id = i++, EDIPI = 9333333333L, UserName="test3"},
             };
         }
 

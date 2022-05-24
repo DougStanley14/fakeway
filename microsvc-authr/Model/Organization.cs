@@ -17,7 +17,6 @@ namespace microsvc_authr.Model
         public virtual ParentOrg ParentOrg { get; set; }
         public virtual ICollection<OrgPlatform> OrgPlatforms { get; set; }
         public virtual ICollection<OrgProgram> OrgPrograms { get; set; }
-
         public virtual ICollection<UserOrg> OrgUsers { get; set; }
     }
 
@@ -34,6 +33,9 @@ namespace microsvc_authr.Model
                        .WithMany(p => p.Orgs)
                        .HasForeignKey(d => d.ParentOrgId)
                        .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Property(b => b.OrgType)
+                   .HasConversion<string>();
         }
     }
 
