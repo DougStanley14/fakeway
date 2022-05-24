@@ -68,7 +68,7 @@ namespace microsvc_authr.Controllers
         }
 
         [HttpGet("SecurityGroups")]
-        public async Task<ActionResult<List<SecurityOrgGroup>>> AllSecurityGroups()
+        public async Task<ActionResult<List<NddsOrg>>> AllSecurityGroups()
         {
             return _usvc.AllSecurityGroups();
         }

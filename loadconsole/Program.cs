@@ -1,31 +1,41 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using microsvc_authr.Data;
+using microsvc_authr.Model;
 
 try
 {
     //var csvFilePath = @"C:\projects\work\NDDS\Deckplate BUNOs.csv";
-    var csvFilePath = @"Deckplate BUNOs.csv";
+    var dbname = "NDDSMeta";
+    var csvFilePath = @"DummyBunoSample.csv";
     var prsr = new BunoDumpParser(csvFilePath);
 
     prsr.ParseBuno();
 
-    var NDDSConnStr = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=NDDSMeta;Integrated Security=True";
+    var NDDSConnStr = $"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog={dbname};Integrated Security=True";
 
     var NDDSOptsBldr = new DbContextOptionsBuilder<NddsAuthRContext>();
     NDDSOptsBldr.UseSqlServer(NDDSConnStr, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
     NDDSOptsBldr.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-    CreateNDDSMeta(NDDSConnStr);
+    CreateNDDSMeta(NDDSConnStr, dbname);
 
     using (var db = new NddsAuthRContext(NDDSOptsBldr.Options))
     {
-        db.Database.ExecuteSqlRaw("ALTER DATABASE NDDSMeta SET RECOVERY FULL");
+        db.Database.ExecuteSqlRaw($"ALTER DATABASE {dbname} SET RECOVERY FULL");
 
-        foreach (var wm in prsr.WMSavers)
+        var cleanplats = prsr.Platforms.Select(p => new Platform { Name = p.Name }).ToList();
+        db.Platforms.AddRange(cleanplats);
+        db.SaveChanges();
+
+        foreach (var org in prsr.WMSavers)
         {
-            db.WingMaws.Add(wm);
+            db.NddsParentOrgs.Add(org);
+
+            var orgplats = org.NddsOrgs.SelectMany(o => o.OrgPlatforms)
+                                       .ToList();
+
             db.SaveChanges();
-            Console.WriteLine($"Added WingMaw {wm.WingMawCode}");
+            Console.WriteLine($"Added ParentOrg {org.LongName}");
         }
     }
 
@@ -37,7 +47,7 @@ catch (Exception ex)
     throw ex;
 }
 
-void CreateNDDSMeta(string CORTAConnStr)
+void CreateNDDSMeta(string CORTAConnStr, string dbname)
 {
     try
     {
@@ -51,7 +61,7 @@ void CreateNDDSMeta(string CORTAConnStr)
             db.Database.EnsureDeleted();
             Console.WriteLine($"Creating {db.Database.GetDbConnection().Database} on {db.Database.GetDbConnection().DataSource}");
             db.Database.EnsureCreated();
-            db.Database.ExecuteSqlRaw("ALTER DATABASE NDDSMeta SET RECOVERY BULK_LOGGED");
+            db.Database.ExecuteSqlRaw($"ALTER DATABASE {dbname} SET RECOVERY BULK_LOGGED");
         }
     }
     catch (Exception ex)

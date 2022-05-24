@@ -9,7 +9,7 @@ namespace microsvc_authr.Services
     {
         List<NddsUser> AllUsers();
         Task<NddsUser> GetUser(long edipi);
-        List<SecurityOrgGroup> AllSecurityGroups();
+        List<NddsOrg> AllSecurityGroups();
         List<String> AllSecurityGroupNames();
     }
 
@@ -26,7 +26,7 @@ namespace microsvc_authr.Services
 
         public List<string> AllSecurityGroupNames()
         {
-            var names = _db.SecurityOrgGroups
+            var names = _db.NddsOrgs
                            .GroupBy( s => s.Name)
                            .Select(g => g.Key)
                            .ToList();
@@ -34,9 +34,9 @@ namespace microsvc_authr.Services
             return names;
         }
 
-        public List<SecurityOrgGroup> AllSecurityGroups()
+        public List<NddsOrg> AllSecurityGroups()
         {
-            var secGrps = _db.SecurityOrgGroups.ToList();
+            var secGrps = _db.NddsOrgs.ToList();
 
             return secGrps;
         }
@@ -51,10 +51,10 @@ namespace microsvc_authr.Services
         public async Task<NddsUser> GetUser(long edipi)
         {
             var usr = await _db.Users
-                               .Include(u => u.SecurityGroups)
-                                  .ThenInclude(s => s.SecurityGroup)
-                                    .ThenInclude(sg => sg.TMSs)
-                                        .ThenInclude(t => t.Bunos)
+                               .Include(u => u.NddsOrgs)
+                                  .ThenInclude(s => s.OrgGroup)
+                                    //.ThenInclude(sg => sg.TMSs)
+                                        //.ThenInclude(t => t.Bunos)
                                .Where(u => u.EDIPI == edipi)
                                .SingleOrDefaultAsync();
 

@@ -26,23 +26,28 @@ namespace microsvc_authr.Data
         }
 
         public virtual DbSet<NddsUser> Users { get; set; }
-        //public virtual DbSet<SecurityGroupFlatDump> SecurityGroupFlatDumps { get; set; }
-        public virtual DbSet<UserSecurityGroup> UserSecurityGroups { get; set; }
-        public virtual DbSet<WingMaw> WingMaws { get; set; }
-        public virtual DbSet<SecurityOrgGroup> SecurityOrgGroups { get; set; }
-        public virtual DbSet<TMS> TMSs { get; set; }
+        public virtual DbSet<UserNddsOrg> UserNddsOrgs { get; set; }
+        public virtual DbSet<NddsParentOrg> NddsParentOrgs { get; set; }
+        public virtual DbSet<NddsOrg> NddsOrgs { get; set; }
+        public virtual DbSet<NddsOrgPlatform> NddsOrgPlatforms { get; set; }
+        public virtual DbSet<Platform> Platforms { get; set; }
+        public virtual DbSet<NddsOrgSysProg> NddsOrgSysProgs { get; set; }
+        public virtual DbSet<SysProg> SysProgs { get; set; }
         public virtual DbSet<Buno> Bunos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
             //mb.ApplyConfiguration(new SecurityGroupFlatDumpConfig());
 
-            mb.ApplyConfiguration(new WingMawConfig());
+            mb.ApplyConfiguration(new NddsParentOrgConfig());
             mb.ApplyConfiguration(new SecurityOrgGroupConfig());
-            mb.ApplyConfiguration(new TMSConfig());
+            mb.ApplyConfiguration(new PlatformConfig());
             mb.ApplyConfiguration(new BunoConfig());
             mb.ApplyConfiguration(new NddsUserConfig());
-            mb.ApplyConfiguration(new UserSecurityGroupConfig());
+            mb.ApplyConfiguration(new UserConsumerOrgGroupConfig());
+            mb.ApplyConfiguration(new NddsOrgPlatformConfig());
+            mb.ApplyConfiguration(new SysProgConfig());
+            mb.ApplyConfiguration(new NddsOrgSysProgConfig());
 
             mb.SeedData();
         }

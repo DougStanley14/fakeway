@@ -31,7 +31,7 @@ namespace microsvc_authr.Model
         //[MaxLength(80)]
         //public string Email { get; set; }
 
-        public virtual ICollection<UserSecurityGroup> SecurityGroups { get; set; }
+        public virtual ICollection<UserNddsOrg> NddsOrgs { get; set; }
     }
 
     public class NddsUserConfig : IEntityTypeConfiguration<NddsUser>

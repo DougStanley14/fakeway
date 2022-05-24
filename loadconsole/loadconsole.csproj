@@ -27,4 +27,10 @@
     <ProjectReference Include="..\microsvc-authr\microsvc-authr.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DummyBunoSample.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

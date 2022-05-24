@@ -57,29 +57,29 @@ namespace microsvc_authr
             {
                 Name = user.UserName, 
                 Edipi = user.EDIPI,
-                Grps = user.SecurityGroups.Select(g => new
+                Grps = user.NddsOrgs.Select(g => new
                 {
-                    g.SecurityGroup.GroupOrg,
-                    g.SecurityGroup.Name,
-                    TMSs = g.SecurityGroup.TMSs.Select(t => new
-                    {
-                        t.Name
-                    }).ToList()
+                    g.OrgGroup.LongName,
+                    g.OrgGroup.Name,
+                    //TMSs = g.OrgGroup.TMSs.Select(t => new
+                    //{
+                    //    t.Name
+                    //}).ToList()
                 }).ToList()
             };
 
             _lgr.LogInformation("User Profile {@prof}", prof);
 
 
-            foreach (var sg in user.SecurityGroups)
+            foreach (var sg in user.NddsOrgs)
             {
-                var tms = sg.SecurityGroup
-                            .TMSs
-                            .GroupBy( t => t.Name)
+                var tms = sg.OrgGroup
+                            .OrgPlatforms
+                            .GroupBy( t => t.Platform.Name)
                             .Select( g => g.Key)
                             .ToList();
 
-                var sgname = sg.SecurityGroup.Name;
+                var sgname = sg.OrgGroup.Name;
 
                 tms.ForEach(t => claims.Add(new Claim("Platform", $"{sgname}:{t}")));
 

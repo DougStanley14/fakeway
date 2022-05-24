@@ -123,53 +123,53 @@ public class InMemSeeder
                 return;   // Data was already seeded
             }
 
-            var csvFilePath = @"BunoSample.csv";
+            var csvFilePath = @"DummyBunoSample.csv";
             var prsr = new BunoDumpParser(csvFilePath);
             prsr.ParseBuno();
 
             db.Users.AddRange(LookupSeeds.NddsUsers());
-            db.WingMaws.AddRange(prsr.WMSavers);
+            db.NddsParentOrgs.AddRange(prsr.WMSavers);
             db.SaveChanges();
 
-            db.UserSecurityGroups.AddRange(GenUsersInGroups(db));
+            db.UserNddsOrgs.AddRange(GenUsersInGroups(db));
             db.SaveChanges();
         }
     }
 
-    private static List<UserSecurityGroup> GenUsersInGroups(NddsAuthRContext db)
+    private static List<UserNddsOrg> GenUsersInGroups(NddsAuthRContext db)
     {
-        var usgs = new List<UserSecurityGroup>();
+        var usgs = new List<UserNddsOrg>();
 
-        var gpname = db.SecurityOrgGroups.GroupBy(x => x.Name).Select(g => g.Key).ToList();
+        var gpname = db.NddsOrgs.GroupBy(x => x.Name).Select(g => g.Key).ToList();
 
         // User 1
         usgs.AddRange(
-            db.SecurityOrgGroups.Where(s => s.Name == "A41")
-            .Select(s => new UserSecurityGroup { NddsUserId = 1, SecurityGroupId = s.Id })
+            db.NddsOrgs.Where(s => s.Name == "A41")
+            .Select(s => new UserNddsOrg { NddsUserId = 1, NddsOrgId = s.Id })
             );
         usgs.AddRange(
-            db.SecurityOrgGroups.Where(s => s.Name == "Q65")
-            .Select(s => new UserSecurityGroup { NddsUserId = 1, SecurityGroupId = s.Id })
+            db.NddsOrgs.Where(s => s.Name == "Q65")
+            .Select(s => new UserNddsOrg { NddsUserId = 1, NddsOrgId = s.Id })
             );
         usgs.AddRange(
-            db.SecurityOrgGroups.Where(s => s.Name == "GE7")
-            .Select(s => new UserSecurityGroup { NddsUserId = 1, SecurityGroupId = s.Id })
+            db.NddsOrgs.Where(s => s.Name == "GE7")
+            .Select(s => new UserNddsOrg { NddsUserId = 1, NddsOrgId = s.Id })
             );
 
         // User 2
         usgs.AddRange(
-            db.SecurityOrgGroups.Where(s => s.Name == "SD2")
-            .Select(s => new UserSecurityGroup { NddsUserId = 2, SecurityGroupId = s.Id })
+            db.NddsOrgs.Where(s => s.Name == "SD2")
+            .Select(s => new UserNddsOrg { NddsUserId = 2, NddsOrgId = s.Id })
             );
         usgs.AddRange(
-            db.SecurityOrgGroups.Where(s => s.Name == "SE4")
-            .Select(s => new UserSecurityGroup { NddsUserId = 2, SecurityGroupId = s.Id })
+            db.NddsOrgs.Where(s => s.Name == "SE4")
+            .Select(s => new UserNddsOrg { NddsUserId = 2, NddsOrgId = s.Id })
             );
 
         // User 3
         usgs.AddRange(
-            db.SecurityOrgGroups.Where(s => s.Name == "GEY")
-            .Select(s => new UserSecurityGroup { NddsUserId = 3, SecurityGroupId = s.Id })
+            db.NddsOrgs.Where(s => s.Name == "GEY")
+            .Select(s => new UserNddsOrg { NddsUserId = 3, NddsOrgId = s.Id })
             );
 
         return usgs;

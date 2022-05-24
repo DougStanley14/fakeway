@@ -14,7 +14,7 @@ namespace microsvc_authr.Model
         public string Location { get; set; }
         public DateTime QtrEndDate { get; set; }
         public int TMSId { get; set; }
-        public virtual TMS TMS { get; set; }
+        public virtual Platform TMS { get; set; }
     }
     public class BunoConfig : IEntityTypeConfiguration<Buno>
     {
@@ -24,9 +24,6 @@ namespace microsvc_authr.Model
             builder.HasIndex(e => e.Id);
             builder.HasIndex(e => e.BunoCode);
             builder.HasIndex(e => e.QtrEndDate);
-
-
-
 
             builder.HasOne(d => d.TMS)
                        .WithMany(p => p.Bunos)

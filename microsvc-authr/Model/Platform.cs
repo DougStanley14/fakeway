@@ -5,29 +5,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace microsvc_authr.Model
 {
-    public class TMS
+    public class Platform
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int SecurityOrgGroupId { get; set; }
-        public virtual SecurityOrgGroup SecurityOrgGroup { get; set; }
+        public string? LongName { get; set; }
+        public virtual ICollection<NddsOrgPlatform> PlatformOrgs { get; set; }
         public List<Buno> Bunos { get; set; }
     }
 
-    public class TMSConfig : IEntityTypeConfiguration<TMS>
+    public class PlatformConfig : IEntityTypeConfiguration<Platform>
     {
-        public void Configure(EntityTypeBuilder<TMS> builder)
+        public void Configure(EntityTypeBuilder<Platform> builder)
         {
-            builder.ToTable("TMSs");
+            builder.ToTable("Platforms");
             builder.HasIndex(e => e.Id);
             builder.HasIndex(e => e.Name);
 
-            builder.HasOne(d => d.SecurityOrgGroup)
-                       .WithMany(p => p.TMSs)
-                       .HasForeignKey(d => d.SecurityOrgGroupId)
-                       .OnDelete(DeleteBehavior.ClientSetNull);
+            //builder.HasOne(d => d.SecurityOrgGroup)
+            //           .WithMany(p => p.TMSs)
+            //           .HasForeignKey(d => d.NddsOrgId)
+            //           .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }
