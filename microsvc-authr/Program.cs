@@ -28,7 +28,7 @@ try
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddDbContext<NddsAuthRContext>(opt => opt.UseInMemoryDatabase("AuthInMem"));
+    builder.Services.AddDbContext<AuthRContext>(opt => opt.UseInMemoryDatabase("AuthInMem"));
     builder.Services.AddScoped<ITokenBuilder, TokenBuilder>();
     builder.Services.AddSwaggerGen();
     builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
@@ -94,7 +94,7 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<NddsAuthRContext>();
+        var context = services.GetRequiredService<AuthRContext>();
         InMemSeeder.Initialize(services);
     }
 
@@ -114,8 +114,8 @@ public class InMemSeeder
 {
     public static void Initialize(IServiceProvider serviceProvider)
     {
-        using (var db = new NddsAuthRContext(
-            serviceProvider.GetRequiredService<DbContextOptions<NddsAuthRContext>>()))
+        using (var db = new AuthRContext(
+            serviceProvider.GetRequiredService<DbContextOptions<AuthRContext>>()))
         {
             // Look for any board games.
             if (db.Users.Any())
@@ -128,48 +128,48 @@ public class InMemSeeder
             prsr.ParseBuno();
 
             db.Users.AddRange(LookupSeeds.NddsUsers());
-            db.NddsParentOrgs.AddRange(prsr.WMSavers);
+            db.ParentOrgs.AddRange(prsr.WMSavers);
             db.SaveChanges();
 
-            db.UserNddsOrgs.AddRange(GenUsersInGroups(db));
+            db.UserOrgs.AddRange(GenUsersInGroups(db));
             db.SaveChanges();
         }
     }
 
-    private static List<UserNddsOrg> GenUsersInGroups(NddsAuthRContext db)
+    private static List<UserOrg> GenUsersInGroups(AuthRContext db)
     {
-        var usgs = new List<UserNddsOrg>();
+        var usgs = new List<UserOrg>();
 
-        var gpname = db.NddsOrgs.GroupBy(x => x.Name).Select(g => g.Key).ToList();
+        var gpname = db.Organizations.GroupBy(x => x.Name).Select(g => g.Key).ToList();
 
         // User 1
         usgs.AddRange(
-            db.NddsOrgs.Where(s => s.Name == "A41")
-            .Select(s => new UserNddsOrg { NddsUserId = 1, NddsOrgId = s.Id })
+            db.Organizations.Where(s => s.Name == "A41")
+            .Select(s => new UserOrg { UserId = 1, OrgId = s.Id })
             );
         usgs.AddRange(
-            db.NddsOrgs.Where(s => s.Name == "Q65")
-            .Select(s => new UserNddsOrg { NddsUserId = 1, NddsOrgId = s.Id })
+            db.Organizations.Where(s => s.Name == "Q65")
+            .Select(s => new UserOrg { UserId = 1, OrgId = s.Id })
             );
         usgs.AddRange(
-            db.NddsOrgs.Where(s => s.Name == "GE7")
-            .Select(s => new UserNddsOrg { NddsUserId = 1, NddsOrgId = s.Id })
+            db.Organizations.Where(s => s.Name == "GE7")
+            .Select(s => new UserOrg { UserId = 1, OrgId = s.Id })
             );
 
         // User 2
         usgs.AddRange(
-            db.NddsOrgs.Where(s => s.Name == "SD2")
-            .Select(s => new UserNddsOrg { NddsUserId = 2, NddsOrgId = s.Id })
+            db.Organizations.Where(s => s.Name == "SD2")
+            .Select(s => new UserOrg { UserId = 2, OrgId = s.Id })
             );
         usgs.AddRange(
-            db.NddsOrgs.Where(s => s.Name == "SE4")
-            .Select(s => new UserNddsOrg { NddsUserId = 2, NddsOrgId = s.Id })
+            db.Organizations.Where(s => s.Name == "SE4")
+            .Select(s => new UserOrg { UserId = 2, OrgId = s.Id })
             );
 
         // User 3
         usgs.AddRange(
-            db.NddsOrgs.Where(s => s.Name == "GEY")
-            .Select(s => new UserNddsOrg { NddsUserId = 3, NddsOrgId = s.Id })
+            db.Organizations.Where(s => s.Name == "GEY")
+            .Select(s => new UserOrg { UserId = 3, OrgId = s.Id })
             );
 
         return usgs;

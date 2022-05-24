@@ -13,7 +13,7 @@ namespace microsvc_authr.Data
 
         private static void StaticSeeds(ModelBuilder mb)
         {
-            mb.Entity<NddsUser>()
+            mb.Entity<User>()
                .HasData(LookupSeeds.NddsUsers());
 
             //mb.Entity<UserSecurityGroup>()

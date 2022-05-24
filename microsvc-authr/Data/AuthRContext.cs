@@ -3,13 +3,13 @@ using microsvc_authr.Model;
 
 namespace microsvc_authr.Data
 {
-    public class NddsAuthRContext : DbContext
+    public class AuthRContext : DbContext
     {
-        public NddsAuthRContext()
+        public AuthRContext()
         {
         }
 
-        public NddsAuthRContext(DbContextOptions<NddsAuthRContext> options)
+        public AuthRContext(DbContextOptions<AuthRContext> options)
             : base(options)
         {
         }
@@ -25,29 +25,29 @@ namespace microsvc_authr.Data
             }
         }
 
-        public virtual DbSet<NddsUser> Users { get; set; }
-        public virtual DbSet<UserNddsOrg> UserNddsOrgs { get; set; }
-        public virtual DbSet<NddsParentOrg> NddsParentOrgs { get; set; }
-        public virtual DbSet<NddsOrg> NddsOrgs { get; set; }
-        public virtual DbSet<NddsOrgPlatform> NddsOrgPlatforms { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserOrg> UserOrgs { get; set; }
+        public virtual DbSet<ParentOrg> ParentOrgs { get; set; }
+        public virtual DbSet<Organization> Organizations { get; set; }
+        public virtual DbSet<OrgPlatform> OrgPlatforms { get; set; }
         public virtual DbSet<Platform> Platforms { get; set; }
-        public virtual DbSet<NddsOrgSysProg> NddsOrgSysProgs { get; set; }
-        public virtual DbSet<SysProg> SysProgs { get; set; }
+        public virtual DbSet<OrgProgram> OrgPrograms { get; set; }
+        public virtual DbSet<NddsProgram> Programs { get; set; }
         public virtual DbSet<Buno> Bunos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
             //mb.ApplyConfiguration(new SecurityGroupFlatDumpConfig());
 
-            mb.ApplyConfiguration(new NddsParentOrgConfig());
-            mb.ApplyConfiguration(new SecurityOrgGroupConfig());
+            mb.ApplyConfiguration(new ParentOrgConfig());
+            mb.ApplyConfiguration(new OrganizationConfig());
             mb.ApplyConfiguration(new PlatformConfig());
             mb.ApplyConfiguration(new BunoConfig());
-            mb.ApplyConfiguration(new NddsUserConfig());
+            mb.ApplyConfiguration(new UserConfig());
             mb.ApplyConfiguration(new UserConsumerOrgGroupConfig());
-            mb.ApplyConfiguration(new NddsOrgPlatformConfig());
-            mb.ApplyConfiguration(new SysProgConfig());
-            mb.ApplyConfiguration(new NddsOrgSysProgConfig());
+            mb.ApplyConfiguration(new OrgPlatformConfig());
+            mb.ApplyConfiguration(new NddsProgramConfig());
+            mb.ApplyConfiguration(new OrgProgamConfig());
 
             mb.SeedData();
         }

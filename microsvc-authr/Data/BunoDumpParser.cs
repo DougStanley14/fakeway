@@ -8,8 +8,8 @@ namespace microsvc_authr.Data
     public class BunoDumpParser
     {
         public string BunoCsvPath { get; set; }
-        public List<NddsParentOrg> WMSeeders { get; set; }
-        public List<NddsParentOrg> WMSavers { get; set; }
+        public List<ParentOrg> WMSeeders { get; set; }
+        public List<ParentOrg> WMSavers { get; set; }
 
         public List<Platform> Platforms { get; set; }
 
@@ -39,22 +39,22 @@ namespace microsvc_authr.Data
                 var bunid = 1;
 
                 WMSeeders = recs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
-                                   .Select(wg => new NddsParentOrg
+                                   .Select(wg => new ParentOrg
                                    {
                                        Id = parid++,
                                        Name =  wg.Key.WingMawCode,
-                                       ParentOrgType = NddsParentOrgType.WingMaw,
+                                       ParentOrgType = ParentOrgType.WingMaw,
                                        LongName = wg.Key.WingMaw,
-                                       NddsOrgs = wg.GroupBy(s => new { s.OrgCode, s.Org })
-                                      .Select(g => new NddsOrg
+                                       Orgs = wg.GroupBy(s => new { s.OrgCode, s.Org })
+                                      .Select(g => new Organization
                                       {
                                           Id = orgid++,
                                           Name = g.Key.OrgCode,
-                                          OrgType = NddsOrgType.Consumer,
+                                          OrgType = OrgType.Consumer,
                                           LongName = g.Key.Org,
-                                          NddsParentOrgId = parid - 1, // offset autoincrement
+                                          ParentOrgId = parid - 1, // offset autoincrement
                                           OrgPlatforms = g.GroupBy(c => c.Tms)
-                                                          .Select(tmg => new NddsOrgPlatform { 
+                                                          .Select(tmg => new OrgPlatform { 
                                                             PlatformId = Platforms
                                                                           .SingleOrDefault( p => p.Name == tmg.Key)
                                                                           .Id
@@ -65,18 +65,18 @@ namespace microsvc_authr.Data
 
                 // Savers Don't Need Keys
                 WMSavers = recs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
-                                   .Select(wg => new NddsParentOrg
+                                   .Select(wg => new ParentOrg
                                    {
                                        Name = wg.Key.WingMawCode,
-                                       ParentOrgType = NddsParentOrgType.WingMaw,
+                                       ParentOrgType = ParentOrgType.WingMaw,
                                        LongName = wg.Key.WingMaw,
-                                       NddsOrgs = wg.GroupBy(s => new { s.OrgCode, s.Org })
-                                      .Select(g => new NddsOrg
+                                       Orgs = wg.GroupBy(s => new { s.OrgCode, s.Org })
+                                      .Select(g => new Organization
                                       {
                                           Name = g.Key.OrgCode,
                                           LongName = g.Key.Org,
                                           OrgPlatforms = g.GroupBy(c => c.Tms)
-                                                          .Select(tmg => new NddsOrgPlatform
+                                                          .Select(tmg => new OrgPlatform
                                                           {
                                                               PlatformId = Platforms
                                                                           .SingleOrDefault(p => p.Name == tmg.Key)

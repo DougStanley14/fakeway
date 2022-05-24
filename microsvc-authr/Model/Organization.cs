@@ -5,39 +5,39 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace microsvc_authr.Model
 {
-    public class NddsOrg
+    public class Organization
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public NddsOrgType OrgType { get; set; }
+        public OrgType OrgType { get; set; }
         public string Name { get; set; }
         public string LongName { get; set; }
-        public int NddsParentOrgId { get; set; }
-        public virtual NddsParentOrg ParentOrg { get; set; }
-        public virtual ICollection<NddsOrgPlatform> OrgPlatforms { get; set; }
-        public virtual ICollection<NddsOrgSysProg> OrgPrograms { get; set; }
+        public int ParentOrgId { get; set; }
+        public virtual ParentOrg ParentOrg { get; set; }
+        public virtual ICollection<OrgPlatform> OrgPlatforms { get; set; }
+        public virtual ICollection<OrgProgram> OrgPrograms { get; set; }
 
-        public virtual ICollection<UserNddsOrg> OrgUsers { get; set; }
+        public virtual ICollection<UserOrg> OrgUsers { get; set; }
     }
 
-    public class SecurityOrgGroupConfig : IEntityTypeConfiguration<NddsOrg>
+    public class OrganizationConfig : IEntityTypeConfiguration<Organization>
     {
-        public void Configure(EntityTypeBuilder<NddsOrg> builder)
+        public void Configure(EntityTypeBuilder<Organization> builder)
         {
-            builder.ToTable("NddsOrg");
+            builder.ToTable("Organizations");
             builder.HasIndex(e => e.Id);
             builder.HasIndex(e => e.Name);
             builder.HasIndex(e => e.LongName);
 
             builder.HasOne(d => d.ParentOrg)
-                       .WithMany(p => p.NddsOrgs)
-                       .HasForeignKey(d => d.NddsParentOrgId)
+                       .WithMany(p => p.Orgs)
+                       .HasForeignKey(d => d.ParentOrgId)
                        .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 
-    public enum NddsOrgType
+    public enum OrgType
     {
         Producer,
         Consumer,

@@ -4,14 +4,14 @@ namespace microsvc_authr.Data.Seeders
 {
     public partial class LookupSeeds
     {
-        public static List<NddsUser> NddsUsers()
+        public static List<User> NddsUsers()
         {
             int i = 1;
-            return new List<NddsUser>
+            return new List<User>
             {
-                new NddsUser { Id = i++, EDIPI = 9111111111L, UserName="test1", Consumer=false, Producer=true},
-                new NddsUser { Id = i++, EDIPI = 9211111111L, UserName="test2", Consumer=true,  Producer=false},
-                new NddsUser { Id = i++, EDIPI = 9333333333L, UserName="test3", Consumer=true,  Producer=true},
+                new User { Id = i++, EDIPI = 9111111111L, UserName="test1", Consumer=false, Producer=true},
+                new User { Id = i++, EDIPI = 9211111111L, UserName="test2", Consumer=true,  Producer=false},
+                new User { Id = i++, EDIPI = 9333333333L, UserName="test3", Consumer=true,  Producer=true},
             };
         }
 

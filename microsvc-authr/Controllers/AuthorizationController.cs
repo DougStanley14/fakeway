@@ -62,13 +62,13 @@ namespace microsvc_authr.Controllers
 
 
         [HttpGet("AllUsers")]
-        public async Task<ActionResult<List<NddsUser>>> AllUsers()
+        public async Task<ActionResult<List<User>>> AllUsers()
         {
             return _usvc.AllUsers();
         }
 
         [HttpGet("SecurityGroups")]
-        public async Task<ActionResult<List<NddsOrg>>> AllSecurityGroups()
+        public async Task<ActionResult<List<Organization>>> AllSecurityGroups()
         {
             return _usvc.AllSecurityGroups();
         }

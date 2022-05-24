@@ -13,13 +13,13 @@ try
 
     var NDDSConnStr = $"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog={dbname};Integrated Security=True";
 
-    var NDDSOptsBldr = new DbContextOptionsBuilder<NddsAuthRContext>();
+    var NDDSOptsBldr = new DbContextOptionsBuilder<AuthRContext>();
     NDDSOptsBldr.UseSqlServer(NDDSConnStr, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
     NDDSOptsBldr.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
     CreateNDDSMeta(NDDSConnStr, dbname);
 
-    using (var db = new NddsAuthRContext(NDDSOptsBldr.Options))
+    using (var db = new AuthRContext(NDDSOptsBldr.Options))
     {
         db.Database.ExecuteSqlRaw($"ALTER DATABASE {dbname} SET RECOVERY FULL");
 
@@ -29,9 +29,9 @@ try
 
         foreach (var org in prsr.WMSavers)
         {
-            db.NddsParentOrgs.Add(org);
+            db.ParentOrgs.Add(org);
 
-            var orgplats = org.NddsOrgs.SelectMany(o => o.OrgPlatforms)
+            var orgplats = org.Orgs.SelectMany(o => o.OrgPlatforms)
                                        .ToList();
 
             db.SaveChanges();
@@ -51,11 +51,11 @@ void CreateNDDSMeta(string CORTAConnStr, string dbname)
 {
     try
     {
-        var optionsBuilder = new DbContextOptionsBuilder<NddsAuthRContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<AuthRContext>();
         optionsBuilder.UseSqlServer(CORTAConnStr);
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-        using (var db = new NddsAuthRContext(optionsBuilder.Options))
+        using (var db = new AuthRContext(optionsBuilder.Options))
         {
             Console.WriteLine($"Dropping {db.Database.GetDbConnection().Database} on {db.Database.GetDbConnection().DataSource}");
             db.Database.EnsureDeleted();

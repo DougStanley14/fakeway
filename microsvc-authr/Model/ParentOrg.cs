@@ -5,22 +5,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace microsvc_authr.Model
 {
-    public class NddsParentOrg
+    public class ParentOrg
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public NddsParentOrgType ParentOrgType { get; set; }
+        public ParentOrgType ParentOrgType { get; set; }
         public string Name { get; set; }
         public string LongName { get; set; }
-        public IEnumerable<NddsOrg> NddsOrgs { get; set; }
+        public IEnumerable<Organization> Orgs { get; set; }
     }
 
-    public class NddsParentOrgConfig : IEntityTypeConfiguration<NddsParentOrg>
+    public class ParentOrgConfig : IEntityTypeConfiguration<ParentOrg>
     {
-        public void Configure(EntityTypeBuilder<NddsParentOrg> builder)
+        public void Configure(EntityTypeBuilder<ParentOrg> builder)
         {
-            builder.ToTable("NddsParentOrgs");
+            builder.ToTable("ParentOrgs");
             builder.HasIndex(e => e.Id);
             builder.HasIndex(e => e.Name);
             builder.HasIndex(e => e.LongName);
@@ -29,7 +29,7 @@ namespace microsvc_authr.Model
                    .HasConversion<string>();
         }
     }
-    public enum NddsParentOrgType
+    public enum ParentOrgType
     {
         WingMaw,
         OtherSuperGroup,

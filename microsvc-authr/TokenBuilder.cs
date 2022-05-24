@@ -57,7 +57,7 @@ namespace microsvc_authr
             {
                 Name = user.UserName, 
                 Edipi = user.EDIPI,
-                Grps = user.NddsOrgs.Select(g => new
+                Grps = user.UserOrgs.Select(g => new
                 {
                     g.OrgGroup.LongName,
                     g.OrgGroup.Name,
@@ -71,7 +71,7 @@ namespace microsvc_authr
             _lgr.LogInformation("User Profile {@prof}", prof);
 
 
-            foreach (var sg in user.NddsOrgs)
+            foreach (var sg in user.UserOrgs)
             {
                 var tms = sg.OrgGroup
                             .OrgPlatforms

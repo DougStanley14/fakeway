@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace microsvc_authr.Model
 {
-    public class NddsUser
+    public class User
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -31,14 +31,14 @@ namespace microsvc_authr.Model
         //[MaxLength(80)]
         //public string Email { get; set; }
 
-        public virtual ICollection<UserNddsOrg> NddsOrgs { get; set; }
+        public virtual ICollection<UserOrg> UserOrgs { get; set; }
     }
 
-    public class NddsUserConfig : IEntityTypeConfiguration<NddsUser>
+    public class UserConfig : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<NddsUser> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("NddsUsers");
+            builder.ToTable("Users");
             builder.HasIndex(e => e.Id);
             builder.HasIndex(e => e.EDIPI);
 

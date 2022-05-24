@@ -5,24 +5,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace microsvc_authr.Model
 {
-    public class Platform
+    public class NddsProgram
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
         public string? LongName { get; set; }
-        public virtual ICollection<OrgPlatform> PlatformOrgs { get; set; }
-        public List<Buno> Bunos { get; set; }
+        public virtual ICollection<OrgProgram> ProgramOrgs { get; set; }
     }
 
-    public class PlatformConfig : IEntityTypeConfiguration<Platform>
+    public class NddsProgramConfig : IEntityTypeConfiguration<NddsProgram>
     {
-        public void Configure(EntityTypeBuilder<Platform> builder)
+        public void Configure(EntityTypeBuilder<NddsProgram> builder)
         {
-            builder.ToTable("Platforms");
+            builder.ToTable("Programs");
             builder.HasIndex(e => e.Id);
-            builder.HasIndex(e => e.Name);
+            builder.HasIndex(e => e.Name);;
         }
     }
 }
