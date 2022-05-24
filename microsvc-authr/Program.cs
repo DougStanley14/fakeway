@@ -127,9 +127,19 @@ public class InMemSeeder
             var prsr = new BunoDumpParser(csvFilePath);
             prsr.ParseBuno();
 
-            db.Users.AddRange(LookupSeeds.NddsUsers());
-            db.ParentOrgs.AddRange(prsr.WMSavers);
+            prsr.Platforms.ForEach(p => p.Id = 0);
+            db.Platforms.AddRange(prsr.Platforms);
             db.SaveChanges();
+            foreach (var org in prsr.WMSavers)
+            {
+                db.ParentOrgs.Add(org);
+
+                var orgplats = org.Orgs.SelectMany(o => o.OrgPlatforms)
+                                           .ToList();
+
+                db.SaveChanges();
+                Console.WriteLine($"Added ParentOrg {org.LongName}");
+            }
 
             db.UserOrgs.AddRange(GenUsersInGroups(db));
             db.SaveChanges();

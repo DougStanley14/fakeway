@@ -25,11 +25,10 @@ namespace microsvc_authr.Data
             using (var reader = new StreamReader(csvFilePath))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-
                 csv.Context.RegisterClassMap<SecurityGroupMap>();
                 var records = csv.GetRecords<SecurityGroupFlatDump>();
 
-
+                // filter out all but latest Bunos
                 var cleanRecs = records.GroupBy( r => r.Buno)
                                        .Select( g => g.OrderByDescending(x => x.QtrEndDate)
                                                       .FirstOrDefault())
