@@ -29,9 +29,14 @@ namespace microsvc_authr.Data
                 csv.Context.RegisterClassMap<SecurityGroupMap>();
                 var records = csv.GetRecords<SecurityGroupFlatDump>();
 
-                var recs = records.ToList();
 
-                Platforms = GenPlatformsAndBunos(recs);
+                var cleanRecs = records.GroupBy( r => r.Buno)
+                                       .Select( g => g.OrderByDescending(x => x.QtrEndDate)
+                                                      .FirstOrDefault())
+                                       .ToList();
+                                                      
+                                                      
+                Platforms = GenPlatformsAndBunos(cleanRecs);
 
 
                 var parid = 1;
@@ -39,7 +44,7 @@ namespace microsvc_authr.Data
                 var pltid = 1;
                 var bunid = 1;
 
-                WMSeeders = recs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
+                WMSeeders = cleanRecs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
                                    .Select(wg => new ParentOrg
                                    {
                                        Id = parid++,
@@ -65,7 +70,7 @@ namespace microsvc_authr.Data
                                    }).ToList();
 
                 // Keys are Nuanced becaus of Many to Many Org to Platform Relationship
-                WMSavers = recs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
+                WMSavers = cleanRecs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
                                    .Select(wg => new ParentOrg
                                    {
                                        Name = wg.Key.WingMawCode,
