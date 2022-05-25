@@ -6,10 +6,10 @@ try
 {
     //var csvFilePath = @"C:\projects\work\NDDS\Deckplate BUNOs.csv";
     var dbname = "NDDSMeta";
-    var csvFilePath = @"DummyBunoSample.csv";
-    var prsr = new BunoDumpParser(csvFilePath);
+    //var csvFilePath = @"DummyBunoSample.csv";
+    //var prsr = new BunoDumpParser(csvFilePath);
 
-    prsr.ParseBuno();
+    //prsr.ParseBuno();
 
     var NDDSConnStr = $"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog={dbname};Integrated Security=True";
 
@@ -23,20 +23,9 @@ try
     {
         db.Database.ExecuteSqlRaw($"ALTER DATABASE {dbname} SET RECOVERY FULL");
 
-        prsr.Platforms.ForEach(p => p.Id = 0);
-        db.Platforms.AddRange(prsr.Platforms);
-        db.SaveChanges();
+        var ldr = new AuthRDBLoader(db, @"DummyBunoSample.csv");
 
-        foreach (var org in prsr.OrgSavers)
-        {
-            db.ParentOrgs.Add(org);
-
-            var orgplats = org.Orgs.SelectMany(o => o.OrgPlatforms)
-                                       .ToList();
-
-            db.SaveChanges();
-            Console.WriteLine($"Added ParentOrg {org.LongName}");
-        }
+        await ldr.Load(noIds: true);
     }
 
     Console.WriteLine("Done");

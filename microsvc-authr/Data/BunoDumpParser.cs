@@ -8,7 +8,7 @@ namespace microsvc_authr.Data
     public class BunoDumpParser
     {
         public string BunoCsvPath { get; set; }
-        public List<ParentOrg> WMSeeders { get; set; }
+        public List<ParentOrg> OrgSeeders { get; set; }
         public List<ParentOrg> OrgSavers { get; set; }
 
         public List<Platform> Platforms { get; set; }
@@ -43,7 +43,8 @@ namespace microsvc_authr.Data
                 var pltid = 1;
                 var bunid = 1;
 
-                WMSeeders = cleanRecs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
+                // May not be Necessary
+                OrgSeeders = cleanRecs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
                                    .Select(wg => new ParentOrg
                                    {
                                        Id = parid++,

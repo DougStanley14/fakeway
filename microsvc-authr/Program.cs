@@ -141,14 +141,13 @@ public class AuthRDBLoader
         this.deckPlateCsv = deckplateCsvPath;
     }
 
-    public async Task Load()
+    public async Task Load(bool noIds = false)
     {
         var csvFilePath = @"DummyBunoSample.csv";
         var prsr = new BunoDumpParser(csvFilePath);
         prsr.ParseBuno();
 
-        //db.Users.AddRange(LookupSeeds.NddsUsers());
-        db.Users.AddRange(NddsUsers());
+        db.Users.AddRange(NddsUsers(noIds));
 
         prsr.Platforms.ForEach(p => p.Id = 0);
         db.Platforms.AddRange(prsr.Platforms);
@@ -185,14 +184,14 @@ public class AuthRDBLoader
         return orgs;
     }
 
-    private List<User> NddsUsers()
+    private List<User> NddsUsers(bool noIds)
     {
         int i = 1;
         return new List<User>
             {
-                new User { Id = i++, EDIPI = 9111111111L, UserName="test1"},
-                new User { Id = i++, EDIPI = 9211111111L, UserName="test2"},
-                new User { Id = i++, EDIPI = 9333333333L, UserName="test3"},
+                new User { Id = noIds ? 0 : i++, EDIPI = 9111111111L, UserName="test1"},
+                new User { Id = noIds ? 0 : i++, EDIPI = 9211111111L, UserName="test2"},
+                new User { Id = noIds ? 0 : i++, EDIPI = 9333333333L, UserName="test3"},
             };
     }
 
