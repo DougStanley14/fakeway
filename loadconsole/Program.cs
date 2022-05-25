@@ -2,6 +2,9 @@
 using microsvc_authr.Data;
 using microsvc_authr.Model;
 
+// Mainly to have a non InMem DB to write Queries against
+// Also for Testing Postgres
+
 try
 {
     var dbname = "NDDSMeta";

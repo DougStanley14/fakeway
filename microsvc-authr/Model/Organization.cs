@@ -18,6 +18,7 @@ namespace microsvc_authr.Model
         public virtual ICollection<OrgPlatform> OrgPlatforms { get; set; }
         public virtual ICollection<OrgProgram> OrgPrograms { get; set; }
         public virtual ICollection<UserOrg> OrgUsers { get; set; }
+        public virtual ICollection<OrgTag> OrgTags { get; set; }
     }
 
     public class OrganizationConfig : IEntityTypeConfiguration<Organization>
