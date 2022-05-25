@@ -23,12 +23,11 @@ try
     {
         db.Database.ExecuteSqlRaw($"ALTER DATABASE {dbname} SET RECOVERY FULL");
 
-        //var cleanplats = prsr.Platforms.Select(p => new Platform { Name = p.Name }).ToList();
         prsr.Platforms.ForEach(p => p.Id = 0);
         db.Platforms.AddRange(prsr.Platforms);
         db.SaveChanges();
 
-        foreach (var org in prsr.WMSavers)
+        foreach (var org in prsr.OrgSavers)
         {
             db.ParentOrgs.Add(org);
 

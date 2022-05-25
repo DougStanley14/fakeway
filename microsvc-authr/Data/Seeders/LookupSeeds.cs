@@ -15,54 +15,17 @@ namespace microsvc_authr.Data.Seeders
             };
         }
 
-        // Deprecated when Hiearchy Implemented
-        //internal static List<UserSecurityGroup> UserSecurityGroups()
-        //{
-        //    var usgs = new List<UserSecurityGroup>();
+        public static List<Organization> DummyProducerOrgs(int MaxOrgId)
+        {
+            int i = MaxOrgId + 1;
 
-        //    // User 1
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "BK1")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 1, SecurityGroupId = s.Id })
-        //        );
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "GDK")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 1, SecurityGroupId = s.Id })
-        //        );
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "B65")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 1, SecurityGroupId = s.Id })
-        //        );
+            var orgs = new List<Organization>
+            {
+                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="CNS/ATM"},
+                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="ProdOrg1"},
+            };
 
-        //    // User 2
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "BL3")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 2, SecurityGroupId = s.Id })
-        //        );
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "B65")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 2, SecurityGroupId = s.Id })
-        //        );
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "GM4")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 2, SecurityGroupId = s.Id })
-        //        );
-
-        //    // User 2
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "BL3")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 3, SecurityGroupId = s.Id })
-        //        );
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "B65")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 3, SecurityGroupId = s.Id })
-        //        );
-        //    usgs.AddRange(
-        //        LookupSeeds.FlatSecurityGroups().Where(s => s.OrgCode == "GM4")
-        //        .Select(s => new UserSecurityGroup { NddsUserId = 3, SecurityGroupId = s.Id })
-        //        );
-
-        //    return usgs;
-        //}
+            return orgs;
+        }
     }
 }

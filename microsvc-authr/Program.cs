@@ -112,7 +112,7 @@ finally
 
 public class InMemSeeder
 {
-    public static void Initialize(IServiceProvider serviceProvider)
+    public static async void Initialize(IServiceProvider serviceProvider)
     {
         using (var db = new AuthRContext(
             serviceProvider.GetRequiredService<DbContextOptions<AuthRContext>>()))
@@ -123,31 +123,80 @@ public class InMemSeeder
                 return;   // Data was already seeded
             }
 
-            var csvFilePath = @"DummyBunoSample.csv";
-            var prsr = new BunoDumpParser(csvFilePath);
-            prsr.ParseBuno();
+            var ldr = new AuthRDBLoader(db, @"DummyBunoSample.csv");
 
-            db.Users.AddRange(LookupSeeds.NddsUsers());
-            prsr.Platforms.ForEach(p => p.Id = 0);
-            db.Platforms.AddRange(prsr.Platforms);
-            db.SaveChanges();
-            foreach (var org in prsr.WMSavers)
-            {
-                db.ParentOrgs.Add(org);
-
-                var orgplats = org.Orgs.SelectMany(o => o.OrgPlatforms)
-                                           .ToList();
-
-                db.SaveChanges();
-                Console.WriteLine($"Added ParentOrg {org.LongName}");
-            }
-
-            db.UserOrgs.AddRange(GenUsersInGroups(db));
-            db.SaveChanges();
+            await ldr.Load();
         }
     }
+}
 
-    private static List<UserOrg> GenUsersInGroups(AuthRContext db)
+public class AuthRDBLoader
+{
+    private AuthRContext db;
+    private string deckPlateCsv;
+
+    public AuthRDBLoader(AuthRContext db, string deckplateCsvPath)
+    {
+        this.db = db;
+        this.deckPlateCsv = deckplateCsvPath;
+    }
+
+    public async Task Load()
+    {
+        var csvFilePath = @"DummyBunoSample.csv";
+        var prsr = new BunoDumpParser(csvFilePath);
+        prsr.ParseBuno();
+
+        //db.Users.AddRange(LookupSeeds.NddsUsers());
+        db.Users.AddRange(NddsUsers());
+
+        prsr.Platforms.ForEach(p => p.Id = 0);
+        db.Platforms.AddRange(prsr.Platforms);
+        db.SaveChanges();
+
+        foreach (var org in prsr.OrgSavers)
+        {
+            db.ParentOrgs.Add(org);
+
+            var orgplats = org.Orgs.SelectMany(o => o.OrgPlatforms)
+                                       .ToList();
+
+            db.SaveChanges();
+            Console.WriteLine($"Added ParentOrg {org.LongName}");
+        }
+
+        var lastOrgId = db.Organizations.Max(o => o.Id);
+        db.Organizations.AddRange(DummyProducerOrgs(lastOrgId));
+        db.UserOrgs.AddRange(DummyUsersInGroups());
+
+        db.SaveChanges();
+    }
+
+    private List<Organization> DummyProducerOrgs(int lastOrgId)
+    {
+        int i = lastOrgId + 1;
+
+        var orgs = new List<Organization>
+            {
+                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="CNS/ATM"},
+                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="ProdOrg1"},
+            };
+
+        return orgs;
+    }
+
+    private List<User> NddsUsers()
+    {
+        int i = 1;
+        return new List<User>
+            {
+                new User { Id = i++, EDIPI = 9111111111L, UserName="test1"},
+                new User { Id = i++, EDIPI = 9211111111L, UserName="test2"},
+                new User { Id = i++, EDIPI = 9333333333L, UserName="test3"},
+            };
+    }
+
+    private List<UserOrg> DummyUsersInGroups()
     {
         var usgs = new List<UserOrg>();
 

@@ -9,7 +9,7 @@ namespace microsvc_authr.Data
     {
         public string BunoCsvPath { get; set; }
         public List<ParentOrg> WMSeeders { get; set; }
-        public List<ParentOrg> WMSavers { get; set; }
+        public List<ParentOrg> OrgSavers { get; set; }
 
         public List<Platform> Platforms { get; set; }
 
@@ -69,7 +69,7 @@ namespace microsvc_authr.Data
                                    }).ToList();
 
                 // Keys are Nuanced becaus of Many to Many Org to Platform Relationship
-                WMSavers = cleanRecs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
+                OrgSavers = cleanRecs.GroupBy(s => new { s.WingMaw, s.WingMawCode })
                                    .Select(wg => new ParentOrg
                                    {
                                        Name = wg.Key.WingMawCode,

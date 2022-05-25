@@ -12,9 +12,9 @@ namespace microsvc_authr.Model
         public int Id { get; set; }
         public OrgType OrgType { get; set; }
         public string Name { get; set; }
-        public string LongName { get; set; }
-        public int ParentOrgId { get; set; }
-        public virtual ParentOrg ParentOrg { get; set; }
+        public string? LongName { get; set; }
+        public int? ParentOrgId { get; set; }
+        public virtual ParentOrg? ParentOrg { get; set; }
         public virtual ICollection<OrgPlatform> OrgPlatforms { get; set; }
         public virtual ICollection<OrgProgram> OrgPrograms { get; set; }
         public virtual ICollection<UserOrg> OrgUsers { get; set; }
