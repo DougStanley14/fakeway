@@ -127,6 +127,7 @@ public class InMemSeeder
             var prsr = new BunoDumpParser(csvFilePath);
             prsr.ParseBuno();
 
+            db.Users.AddRange(LookupSeeds.NddsUsers());
             prsr.Platforms.ForEach(p => p.Id = 0);
             db.Platforms.AddRange(prsr.Platforms);
             db.SaveChanges();

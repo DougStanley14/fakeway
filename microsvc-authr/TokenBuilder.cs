@@ -41,74 +41,31 @@ namespace microsvc_authr
 
         private async Task<List<Claim>> GetUserClaims(string userName, string edipi)
         {
-            var edipilong = long.Parse(edipi);  
-            var user = await _usvc.GetUser(edipilong);
+            var edipilong = long.Parse(edipi);
+            var usermeta = await _usvc.GetUserMeta(edipilong);
 
             var claims = new List<Claim> {
                 new Claim("EDIPI", edipi),
                 new Claim("preferred_username", userName ),
             };
 
-            //if (user.Producer) claims.Add(new Claim(ClaimTypes.Role, "Producer"));
-            //if (user.Consumer) claims.Add(new Claim(ClaimTypes.Role, "Consumer"));
+            _lgr.LogInformation("User Profile {@meta}", usermeta);
 
+            // Add Producer and/or Consumer Claim - Just one of each
+            var roles = usermeta.OrgClaimsMeta.GroupBy(o => o.OrgType)
+                                  .Select(g => g.Key)
+                                  .ToList();
 
-            var prof = new
+            if (roles.Any(r => r == Model.OrgType.Producer)) claims.Add(new Claim(ClaimTypes.Role, "Producer"));
+            if (roles.Any(r => r == Model.OrgType.Consumer)) claims.Add(new Claim(ClaimTypes.Role, "Consumer"));
+
+            foreach (var org in usermeta.OrgClaimsMeta)
             {
-                Name = user.UserName, 
-                Edipi = user.EDIPI,
-                Grps = user.UserOrgs.Select(g => new
-                {
-                    g.OrgGroup.LongName,
-                    g.OrgGroup.Name,
-                    //TMSs = g.OrgGroup.TMSs.Select(t => new
-                    //{
-                    //    t.Name
-                    //}).ToList()
-                }).ToList()
-            };
 
-            _lgr.LogInformation("User Profile {@prof}", prof);
-
-
-            foreach (var sg in user.UserOrgs)
-            {
-                var tms = sg.OrgGroup
-                            .OrgPlatforms
-                            .GroupBy( t => t.Platform.Name)
-                            .Select( g => g.Key)
-                            .ToList();
-
-                var sgname = sg.OrgGroup.Name;
-
-                tms.ForEach(t => claims.Add(new Claim("Platform", $"{sgname}:{t}")));
+                org.Platforms.ForEach(p => claims.Add(new Claim("Platform", $"{org.OrgName}:{p}")));
+                org.Programs.ForEach(p => claims.Add(new Claim("Program", $"{org.OrgName}:{p}")));
 
             }
-
-            //// TMS
-            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.Tms)
-            //                   .Select(g => g.Key).ToList()
-            //                   .ForEach(x => claims.Add(new Claim("TMS", x)));
-
-            //// TypeModel
-            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.TypeModel)
-            //                   .Select(g => g.Key).ToList()
-            //                   .ForEach(x => claims.Add(new Claim("TypeModel", x)));
-
-            //// Org
-            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.Org)
-            //                   .Select(g => g.Key).ToList()
-            //                   .ForEach(x => claims.Add(new Claim("Org", x)));
-
-            //// OrgCode
-            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.OrgCode)
-            //                   .Select(g => g.Key).ToList()
-            //                   .ForEach(x => claims.Add(new Claim("OrgCode", x)));
-
-            //// Buno
-            //user.SecurityGroups.GroupBy(s => s.SecurityGroup.Buno)
-            //                   .Select(g => g.Key).ToList()
-            //                   .ForEach(x => claims.Add(new Claim("Buno", x.ToString())));
 
 
             return claims;
