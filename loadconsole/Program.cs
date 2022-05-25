@@ -4,13 +4,7 @@ using microsvc_authr.Model;
 
 try
 {
-    //var csvFilePath = @"C:\projects\work\NDDS\Deckplate BUNOs.csv";
     var dbname = "NDDSMeta";
-    //var csvFilePath = @"DummyBunoSample.csv";
-    //var prsr = new BunoDumpParser(csvFilePath);
-
-    //prsr.ParseBuno();
-
     var NDDSConnStr = $"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog={dbname};Integrated Security=True";
 
     var NDDSOptsBldr = new DbContextOptionsBuilder<AuthRContext>();

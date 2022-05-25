@@ -141,7 +141,7 @@ public class AuthRDBLoader
         this.deckPlateCsv = deckplateCsvPath;
     }
 
-    public async Task Load(bool noIds = false)
+    public async Task Load(bool noIds = false) // Some of the EF Seeding doesn't want id's
     {
         var csvFilePath = @"DummyBunoSample.csv";
         var prsr = new BunoDumpParser(csvFilePath);
@@ -165,20 +165,20 @@ public class AuthRDBLoader
         }
 
         var lastOrgId = db.Organizations.Max(o => o.Id);
-        db.Organizations.AddRange(DummyProducerOrgs(lastOrgId));
+        db.Organizations.AddRange(DummyProducerOrgs(lastOrgId, noIds));
         db.UserOrgs.AddRange(DummyUsersInGroups());
 
         db.SaveChanges();
     }
 
-    private List<Organization> DummyProducerOrgs(int lastOrgId)
+    private List<Organization> DummyProducerOrgs(int lastOrgId, bool noIds)
     {
         int i = lastOrgId + 1;
 
         var orgs = new List<Organization>
             {
-                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="CNS/ATM"},
-                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="ProdOrg1"},
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=1,    Name="CNS/ATM" , LongName="C N S A T M" },
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Name="ProdOrg1", LongName="Producer Org 1" },
             };
 
         return orgs;
