@@ -40,7 +40,7 @@ namespace microsvc_filemeta.Controllers
             return $"Get: {id}";
         }
 
-        [Authorize(Roles = "Producer")]
+        [Authorize(Roles = "Consumer")]
         [HttpPost]
         public async Task<ActionResult<NDFileMeta>> Post([FromForm] NDFileMeta fileMeta)
         {
