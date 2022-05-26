@@ -12,7 +12,7 @@ namespace microsvc_authr.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string? LongName { get; set; }
-        public virtual ICollection<OrgProgram> ProgramOrgs { get; set; }
+        public virtual ICollection<Organization> Orgs { get; set; }
     }
 
     public class NddsProgramConfig : IEntityTypeConfiguration<NddsProgram>

@@ -31,7 +31,6 @@ namespace microsvc_authr.Data
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<OrgPlatform> OrgPlatforms { get; set; }
         public virtual DbSet<Platform> Platforms { get; set; }
-        public virtual DbSet<OrgProgram> OrgPrograms { get; set; }
         public virtual DbSet<NddsProgram> Programs { get; set; }
         public virtual DbSet<Buno> Bunos { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
@@ -48,7 +47,6 @@ namespace microsvc_authr.Data
             mb.ApplyConfiguration(new UserConsumerOrgGroupConfig());
             mb.ApplyConfiguration(new OrgPlatformConfig());
             mb.ApplyConfiguration(new NddsProgramConfig());
-            mb.ApplyConfiguration(new OrgProgamConfig());
             mb.ApplyConfiguration(new TagConfig());
 
             mb.SeedData();

@@ -21,7 +21,7 @@ namespace microsvc_authr.Model
         public int? ParentOrgId { get; set; }
         public virtual ParentOrg? ParentOrg { get; set; }
         public virtual ICollection<OrgPlatform> OrgPlatforms { get; set; }
-        public virtual ICollection<OrgProgram> OrgPrograms { get; set; }
+        public virtual ICollection<NddsProgram> Programs { get; set; }
         public virtual ICollection<UserOrg> OrgUsers { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
     }
