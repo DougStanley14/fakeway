@@ -11,7 +11,6 @@ namespace microsvc_authr.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string? LongName { get; set; }
         public virtual ICollection<OrgTag> TagOrgs { get; set; }
     }
 
