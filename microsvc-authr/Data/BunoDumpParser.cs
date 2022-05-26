@@ -59,12 +59,10 @@ namespace microsvc_authr.Data
                                           OrgType = OrgType.Consumer,
                                           LongName = g.Key.Org,
                                           ParentOrgId = parid - 1, // offset autoincrement
-                                          OrgPlatforms = g.GroupBy(c => c.Tms)
-                                                          .Select(tmg => new OrgPlatform { 
-                                                            PlatformId = Platforms
+                                          Platforms = g.GroupBy(c => c.Tms)
+                                                          .Select(tmg => Platforms
                                                                           .SingleOrDefault( p => p.Name == tmg.Key)
-                                                                          .Id
-                                                          }).ToList()
+                                                          ).ToList()
 
                                       }).ToList()
                                    }).ToList();
@@ -82,13 +80,10 @@ namespace microsvc_authr.Data
                                           Name = g.Key.OrgCode,
                                           OrgType = OrgType.Consumer,
                                           LongName = g.Key.Org,
-                                          OrgPlatforms = g.GroupBy(c => c.Tms)
-                                                          .Select(tmg => new OrgPlatform
-                                                          {
-                                                              PlatformId = Platforms
+                                          Platforms = g.GroupBy(c => c.Tms)
+                                                          .Select(tmg => Platforms
                                                                           .SingleOrDefault(p => p.Name == tmg.Key)
-                                                                          .Id
-                                                          }).ToList()
+                                                          ).ToList()
                                       }).ToList()
                                    }).ToList();
             }

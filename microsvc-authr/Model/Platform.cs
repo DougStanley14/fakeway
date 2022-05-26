@@ -7,12 +7,18 @@ namespace microsvc_authr.Model
 {
     public class Platform
     {
+        public Platform()
+        {
+            Orgs = new List<Organization>();
+            Bunos = new List<Buno>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
         public string? LongName { get; set; }
-        public virtual ICollection<OrgPlatform> PlatformOrgs { get; set; }
+        public virtual ICollection<Organization> Orgs { get; set; }
         public List<Buno> Bunos { get; set; }
     }
 

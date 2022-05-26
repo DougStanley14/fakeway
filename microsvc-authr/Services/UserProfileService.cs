@@ -57,13 +57,13 @@ namespace microsvc_authr.Services
                                       {
                                           EDIPI = u.EDIPI,
                                           UserName = u.UserName,
-                                          OrgClaimsMeta = u.UserOrgs.Select(o => new UserOrgsClaimsMeta
+                                          OrgClaimsMeta = u.Orgs.Select(o => new UserOrgsClaimsMeta
                                           {
-                                              OrgName = o.OrgGroup.Name,
-                                              OrgType = o.OrgGroup.OrgType,
-                                              Platforms = o.OrgGroup.OrgPlatforms.Select(p => p.Platform.Name).ToList(),
-                                              Programs = o.OrgGroup.Programs.Select(p => p.Name).ToList(),
-                                              Bunos = o.OrgGroup.OrgPlatforms.SelectMany(p => p.Platform.Bunos.Select(b => b.BunoCode)).ToList()
+                                              OrgName = o.Name,
+                                              OrgType = o.OrgType,
+                                              Platforms = o.Platforms.Select(p => p.Name).ToList(),
+                                              Programs = o.Programs.Select(p => p.Name).ToList(),
+                                              Bunos = o.Platforms.SelectMany(p => p.Bunos.Select(b => b.BunoCode)).ToList()
                                           }).ToList()
                                       }).FirstOrDefaultAsync();
 

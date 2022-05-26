@@ -7,6 +7,11 @@ namespace microsvc_authr.Model
 {
     public class User
     {
+        public User()
+        {
+            Orgs = new List<Organization>();
+        }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
@@ -27,7 +32,7 @@ namespace microsvc_authr.Model
         //[MaxLength(80)]
         //public string Email { get; set; }
 
-        public virtual ICollection<UserOrg> UserOrgs { get; set; }
+        public virtual ICollection<Organization> Orgs { get; set; }
     }
 
     public class UserConfig : IEntityTypeConfiguration<User>

@@ -7,6 +7,11 @@ namespace microsvc_authr.Model
 {
     public class NddsProgram
     {
+        public NddsProgram()
+        {
+            Orgs = new List<Organization>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

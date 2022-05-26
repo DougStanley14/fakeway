@@ -36,10 +36,11 @@ public class AuthRDBLoader
 
         var lastOrgId = db.Organizations.Max(o => o.Id);
         db.Organizations.AddRange(DummyProducerOrgs(lastOrgId, noIds));
-        db.UserOrgs.AddRange(DummyUsersInGroups());
         db.Tags.AddRange(GenDummyTags(noIds));
 
         await db.SaveChangesAsync();
+
+        await AddUsersToOrgs();
 
         await GenDummyOrgTags2();
 
@@ -97,24 +98,6 @@ public class AuthRDBLoader
         return tags;
     }
 
-    //private List<OrgTag> GenDummyOrgTags(bool noIds)
-    //{
-    //    var oids = db.Organizations.Select(o => o.Id).ToList();
-    //    var tids = db.Tags.Select(o => o.Id).ToList();
-
-    //    var fakeOrgTag = new Faker<OrgTag>()
-    //        .RuleFor(t => t.TagId, f => f.PickRandom(tids))
-    //        .RuleFor(t => t.OrganizationId, f => f.PickRandom(oids));
-
-    //    var firstList = fakeOrgTag.Generate(50).ToList();
-
-    //    var dedupes = firstList.GroupBy(o => new {o.TagId, o.OrganizationId}).Select(g => g.FirstOrDefault()).ToList();
-
-    //    return dedupes;
-    //}
-
-
-
     private List<ParentOrg> ExtraParentOrgs(int lastParOrgId, bool noIds)
     {
         int i = lastParOrgId + 1;
@@ -139,42 +122,36 @@ public class AuthRDBLoader
             };
     }
 
-    private List<UserOrg> DummyUsersInGroups()
+    private async Task AddUsersToOrgs()
     {
-        var usgs = new List<UserOrg>();
+        var user1 = await db.Users.FindAsync(1);
+        var user2 = await db.Users.FindAsync(2);
+        var user3 = await db.Users.FindAsync(3);
+
+        // Shitty QD refactor of old seeder
+        var org1 = await db.Organizations.Where(s => s.Name == "A41").SingleOrDefaultAsync();
+        var org2 = await db.Organizations.Where(s => s.Name == "Q64").SingleOrDefaultAsync();
+        var org3 = await db.Organizations.Where(s => s.Name == "GE7").SingleOrDefaultAsync();
+        var org4 = await db.Organizations.Where(s => s.Name == "SD2").SingleOrDefaultAsync();
+        var org5 = await db.Organizations.Where(s => s.Name == "SE4").SingleOrDefaultAsync();
+        var org6 = await db.Organizations.Where(s => s.Name == "GEY").SingleOrDefaultAsync();
 
         var gpname = db.Organizations.GroupBy(x => x.Name).Select(g => g.Key).ToList();
 
         // User 1
-        usgs.AddRange(
-            db.Organizations.Where(s => s.Name == "A41")
-            .Select(s => new UserOrg { UserId = 1, OrgId = s.Id })
-            );
-        usgs.AddRange(
-            db.Organizations.Where(s => s.Name == "Q65")
-            .Select(s => new UserOrg { UserId = 1, OrgId = s.Id })
-            );
-        usgs.AddRange(
-            db.Organizations.Where(s => s.Name == "GE7")
-            .Select(s => new UserOrg { UserId = 1, OrgId = s.Id })
-            );
+        user1.Orgs.Add(org1);
+        user1.Orgs.Add(org2);
+        user1.Orgs.Add(org3);
+
 
         // User 2
-        usgs.AddRange(
-            db.Organizations.Where(s => s.Name == "SD2")
-            .Select(s => new UserOrg { UserId = 2, OrgId = s.Id })
-            );
-        usgs.AddRange(
-            db.Organizations.Where(s => s.Name == "SE4")
-            .Select(s => new UserOrg { UserId = 2, OrgId = s.Id })
-            );
+        user2.Orgs.Add(org4);
+        user2.Orgs.Add(org5);
+
 
         // User 3
-        usgs.AddRange(
-            db.Organizations.Where(s => s.Name == "GEY")
-            .Select(s => new UserOrg { UserId = 3, OrgId = s.Id })
-            );
+        user3.Orgs.Add(org6);
 
-        return usgs;
+        await db.SaveChangesAsync();
     }
 }
