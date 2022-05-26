@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 using microsvc_authr.Data;
 using microsvc_authr.Model;
 
@@ -40,11 +41,38 @@ public class AuthRDBLoader
 
         await db.SaveChangesAsync();
 
-        db.OrgTags.AddRange(GenDummyOrgTags(noIds));
+        await GenDummyOrgTags2();
+
+        await db.SaveChangesAsync();
+
+        var orgtags = await db.Organizations.Select(o => new
+        {
+            o.Name,
+            Tags = o.Tags.Count()
+        }).ToListAsync();
+    }
+
+    private async Task GenDummyOrgTags2()
+    {
+        var tags = await db.Tags.ToArrayAsync();
+        var orgs = await db.Organizations.ToListAsync();
+
+        var rand = new Bogus.Randomizer();
+
+        foreach (var org in orgs)
+        {
+            List<Tag> tagset = rand.ArrayElements<Tag>(tags, rand.Int(0, tags.Count())).ToList();
+
+            foreach (var t in tagset)
+            {
+                org.Tags.Add(t);
+            }
+
+            await db.SaveChangesAsync();
+        }
 
         await db.SaveChangesAsync();
     }
-
 
     private List<Organization> DummyProducerOrgs(int lastOrgId, bool noIds)
     {
@@ -69,21 +97,21 @@ public class AuthRDBLoader
         return tags;
     }
 
-    private List<OrgTag> GenDummyOrgTags(bool noIds)
-    {
-        var oids = db.Organizations.Select(o => o.Id).ToList();
-        var tids = db.Tags.Select(o => o.Id).ToList();
+    //private List<OrgTag> GenDummyOrgTags(bool noIds)
+    //{
+    //    var oids = db.Organizations.Select(o => o.Id).ToList();
+    //    var tids = db.Tags.Select(o => o.Id).ToList();
 
-        var fakeOrgTag = new Faker<OrgTag>()
-            .RuleFor(t => t.TagId, f => f.PickRandom(tids))
-            .RuleFor(t => t.OrganizationId, f => f.PickRandom(oids));
+    //    var fakeOrgTag = new Faker<OrgTag>()
+    //        .RuleFor(t => t.TagId, f => f.PickRandom(tids))
+    //        .RuleFor(t => t.OrganizationId, f => f.PickRandom(oids));
 
-        var firstList = fakeOrgTag.Generate(50).ToList();
+    //    var firstList = fakeOrgTag.Generate(50).ToList();
 
-        var dedupes = firstList.GroupBy(o => new {o.TagId, o.OrganizationId}).Select(g => g.FirstOrDefault()).ToList();
+    //    var dedupes = firstList.GroupBy(o => new {o.TagId, o.OrganizationId}).Select(g => g.FirstOrDefault()).ToList();
 
-        return dedupes;
-    }
+    //    return dedupes;
+    //}
 
 
 

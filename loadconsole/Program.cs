@@ -12,7 +12,7 @@ try
 
     var NDDSOptsBldr = new DbContextOptionsBuilder<AuthRContext>();
     NDDSOptsBldr.UseSqlServer(NDDSConnStr, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
-    NDDSOptsBldr.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    //NDDSOptsBldr.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
     CreateNDDSMeta(NDDSConnStr, dbname);
 

@@ -35,7 +35,6 @@ namespace microsvc_authr.Data
         public virtual DbSet<NddsProgram> Programs { get; set; }
         public virtual DbSet<Buno> Bunos { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
-        public virtual DbSet<OrgTag> OrgTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
@@ -51,7 +50,6 @@ namespace microsvc_authr.Data
             mb.ApplyConfiguration(new NddsProgramConfig());
             mb.ApplyConfiguration(new OrgProgamConfig());
             mb.ApplyConfiguration(new TagConfig());
-            mb.ApplyConfiguration(new OrgTagConfig());
 
             mb.SeedData();
         }

@@ -7,11 +7,16 @@ namespace microsvc_authr.Model
 {
     public class Tag
     {
+        public Tag()
+        {
+            Orgs = new List<Organization>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<OrgTag> TagOrgs { get; set; }
+        public virtual ICollection<Organization> Orgs { get; set; }
     }
 
     public class TagConfig : IEntityTypeConfiguration<Tag>
