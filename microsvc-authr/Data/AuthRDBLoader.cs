@@ -48,7 +48,7 @@ public class AuthRDBLoader
 
         var orgtags = await db.Organizations.Select(o => new
         {
-            o.Name,
+            o.Code,
             Tags = o.Tags.Count()
         }).ToListAsync();
     }
@@ -81,8 +81,8 @@ public class AuthRDBLoader
 
         var orgs = new List<Organization>
             {
-                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=1,    Name="CNS/ATM" , LongName="C N S A T M" },
-                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Name="ProdOrg1", LongName="Producer Org 1" },
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=1,    Code="CNS/ATM" , Name="C N S A T M" },
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Code="ProdOrg1", Name="Producer Org 1" },
             };
 
         return orgs;
@@ -129,14 +129,14 @@ public class AuthRDBLoader
         var user3 = await db.Users.FindAsync(3);
 
         // Shitty QD refactor of old seeder
-        var org1 = await db.Organizations.Where(s => s.Name == "A41").SingleOrDefaultAsync();
-        var org2 = await db.Organizations.Where(s => s.Name == "Q64").SingleOrDefaultAsync();
-        var org3 = await db.Organizations.Where(s => s.Name == "GE7").SingleOrDefaultAsync();
-        var org4 = await db.Organizations.Where(s => s.Name == "SD2").SingleOrDefaultAsync();
-        var org5 = await db.Organizations.Where(s => s.Name == "SE4").SingleOrDefaultAsync();
-        var org6 = await db.Organizations.Where(s => s.Name == "GEY").SingleOrDefaultAsync();
+        var org1 = await db.Organizations.Where(s => s.Code == "A41").SingleOrDefaultAsync();
+        var org2 = await db.Organizations.Where(s => s.Code == "Q64").SingleOrDefaultAsync();
+        var org3 = await db.Organizations.Where(s => s.Code == "GE7").SingleOrDefaultAsync();
+        var org4 = await db.Organizations.Where(s => s.Code == "SD2").SingleOrDefaultAsync();
+        var org5 = await db.Organizations.Where(s => s.Code == "SE4").SingleOrDefaultAsync();
+        var org6 = await db.Organizations.Where(s => s.Code == "GEY").SingleOrDefaultAsync();
 
-        var gpname = db.Organizations.GroupBy(x => x.Name).Select(g => g.Key).ToList();
+        var gpname = db.Organizations.GroupBy(x => x.Code).Select(g => g.Key).ToList();
 
         // User 1
         user1.Orgs.Add(org1);

@@ -20,8 +20,9 @@ namespace microsvc_authr.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public OrgType OrgType { get; set; }
-        public string Name { get; set; }
-        public string? LongName { get; set; }
+        public string Code { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public int? ParentOrgId { get; set; }
         public virtual ParentOrg? ParentOrg { get; set; }
         public virtual ICollection<Platform> Platforms { get; set; }
@@ -36,8 +37,8 @@ namespace microsvc_authr.Model
         {
             builder.ToTable("Organizations");
             builder.HasIndex(e => e.Id);
+            builder.HasIndex(e => e.Code);
             builder.HasIndex(e => e.Name);
-            builder.HasIndex(e => e.LongName);
 
             builder.HasOne(d => d.ParentOrg)
                        .WithMany(p => p.Orgs)

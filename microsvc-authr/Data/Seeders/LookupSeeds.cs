@@ -21,8 +21,8 @@ namespace microsvc_authr.Data.Seeders
 
             var orgs = new List<Organization>
             {
-                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="CNS/ATM"},
-                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Name="ProdOrg1"},
+                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Code="CNS/ATM"},
+                new Organization { /*Id = i++, ParentOrgId = 1, */ OrgType = OrgType.Producer, Code="ProdOrg1"},
             };
 
             return orgs;

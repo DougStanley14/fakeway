@@ -27,7 +27,7 @@ namespace microsvc_authr.Services
         public List<string> AllSecurityGroupNames()
         {
             var names = _db.Organizations
-                           .GroupBy(s => s.Name)
+                           .GroupBy(s => s.Code)
                            .Select(g => g.Key)
                            .ToList();
 
@@ -59,7 +59,7 @@ namespace microsvc_authr.Services
                                           UserName = u.UserName,
                                           OrgClaimsMeta = u.Orgs.Select(o => new UserOrgsClaimsMeta
                                           {
-                                              OrgName = o.Name,
+                                              OrgName = o.Code,
                                               OrgType = o.OrgType,
                                               Platforms = o.Platforms.Select(p => p.Name).ToList(),
                                               Programs = o.Programs.Select(p => p.Name).ToList(),

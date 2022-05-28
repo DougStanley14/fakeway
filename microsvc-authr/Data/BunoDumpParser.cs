@@ -55,9 +55,9 @@ namespace microsvc_authr.Data
                                       .Select(g => new Organization
                                       {
                                           Id = orgid++,
-                                          Name = g.Key.OrgCode,
+                                          Code = g.Key.OrgCode,
                                           OrgType = OrgType.Consumer,
-                                          LongName = g.Key.Org,
+                                          Name = g.Key.Org,
                                           ParentOrgId = parid - 1, // offset autoincrement
                                           Platforms = g.GroupBy(c => c.Tms)
                                                           .Select(tmg => Platforms
@@ -77,9 +77,9 @@ namespace microsvc_authr.Data
                                        Orgs = wg.GroupBy(s => new { s.OrgCode, s.Org })
                                       .Select(g => new Organization
                                       {
-                                          Name = g.Key.OrgCode,
+                                          Code = g.Key.OrgCode,
                                           OrgType = OrgType.Consumer,
-                                          LongName = g.Key.Org,
+                                          Name = g.Key.Org,
                                           Platforms = g.GroupBy(c => c.Tms)
                                                           .Select(tmg => Platforms
                                                                           .SingleOrDefault(p => p.Name == tmg.Key)
