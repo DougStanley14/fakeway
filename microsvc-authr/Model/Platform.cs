@@ -18,6 +18,7 @@ namespace microsvc_authr.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
+        public string? TypeModel { get; set; }
         public virtual ICollection<Organization> Orgs { get; set; }
         public List<Buno> Bunos { get; set; }
     }

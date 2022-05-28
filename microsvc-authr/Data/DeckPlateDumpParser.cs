@@ -96,6 +96,7 @@ namespace microsvc_authr.Data
                             .Select(g => new Platform { 
                                 Id = id++, 
                                 Name = g.Key,
+                                TypeModel = g.FirstOrDefault().TypeModel,
                                 Bunos = g.Select(t => new Buno
                                 {
                                     BunoCode = t.Buno,
