@@ -17,8 +17,8 @@ public class AuthRDBLoader
     public async Task Load(bool noIds = false) // Some of the EF Seeding doesn't want id's
     {
         var csvFilePath = @"DummyBunoSample.csv";
-        var prsr = new BunoDumpParser(csvFilePath);
-        prsr.ParseBuno();
+        var prsr = new DeckPlateDumpParser(csvFilePath);
+        prsr.ParseDeckplateCSV();
 
         db.Users.AddRange(NddsUsers(noIds));
 

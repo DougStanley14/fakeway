@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace microsvc_authr.Data
 {
-    public class BunoDumpParser
+    public class DeckPlateDumpParser
     {
         public string BunoCsvPath { get; set; }
         public List<ParentOrg> OrgSeeders { get; set; }
@@ -13,12 +13,12 @@ namespace microsvc_authr.Data
 
         public List<Platform> Platforms { get; set; }
 
-        public BunoDumpParser(string csvPath)
+        public DeckPlateDumpParser(string csvPath)
         {
             BunoCsvPath = csvPath;
         }
 
-        public void ParseBuno()
+        public void ParseDeckplateCSV()
         {
             var csvFilePath = BunoCsvPath;
 
