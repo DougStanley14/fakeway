@@ -1,0 +1,19 @@
+### File Meta Post Good User:Test1
+
+POST http://localhost:5178/api/FileMeta
+Content-Type: application/x-www-form-urlencoded
+Authorization: bearer {{$dotenv AuthRToken}}
+
+FileHash=23423lkjlkjlkj34233422
+&UserSecGroup=GE7
+&Platform=F-35C
+
+### File Meta Post Denied User:Test1
+
+POST http://localhost:5178/api/FileMeta
+Content-Type: application/x-www-form-urlencoded
+Authorization: bearer {{$dotenv AuthRToken}}
+
+FileHash=23423lkjlkjlkj34233422
+&UserSecGroup=OtherGroup
+&Platform=F-35C

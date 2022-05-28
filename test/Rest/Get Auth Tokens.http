@@ -1,0 +1,14 @@
+### Get AuthN Token from Keycloak with U/P
+# @name get_authn
+POST http://localhost:8080/auth/realms/fakedds/protocol/openid-connect/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id=testapp&username=test1&password=test1
+
+### Get AuthR Token
+# @name get_authr
+@access_token = {{$dotenv AuthNToken}}
+get http://localhost:5038/api/Authorization/authorize
+Content-Type: application/json
+Authorization: bearer {{access_token}}
+
