@@ -21,7 +21,7 @@ public class AuthRDBLoader
         prsr.ParseDeckplateCSV();
 
         db.Users.AddRange(NddsUsers(noIds));
-
+        db.Programs.AddRange(SampleProgramsFromASE(noIds));
         prsr.Platforms.ForEach(p => p.Id = 0);
         db.Platforms.AddRange(prsr.Platforms);
         await db.SaveChangesAsync();
@@ -42,7 +42,9 @@ public class AuthRDBLoader
 
         await AddUsersToOrgs();
 
-        await GenDummyOrgTags2();
+        await GenDummyOrgTags();
+
+        await GenDummyOrgPrograms();
 
         await db.SaveChangesAsync();
 
@@ -53,7 +55,29 @@ public class AuthRDBLoader
         }).ToListAsync();
     }
 
-    private async Task GenDummyOrgTags2()
+    private async Task GenDummyOrgPrograms()
+    {
+        var progs = await db.Programs.ToArrayAsync();
+        var prodOrgs = await db.Organizations.Where(o => o.OrgType == OrgType.Producer).ToListAsync();
+
+        var rand = new Bogus.Randomizer();
+
+        foreach (var org in prodOrgs)
+        {
+            List<NddsProgram> programset = rand.ArrayElements<NddsProgram>(progs, rand.Int(0, progs.Count())).ToList();
+
+            foreach (var t in programset)
+            {
+                org.Programs.Add(t);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        await db.SaveChangesAsync();
+    }
+
+    private async Task GenDummyOrgTags()
     {
         var tags = await db.Tags.ToArrayAsync();
         var orgs = await db.Organizations.ToListAsync();
@@ -82,11 +106,14 @@ public class AuthRDBLoader
         var orgs = new List<Organization>
             {
                 new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=1,    Code="CNS/ATM" , Name="C N S A T M" },
-                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Code="ProdOrg1", Name="Producer Org 1" },
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Code="NProd1", Name="Producer Org 1" },
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Code="NProd2", Name="Producer Org 2" },
+                new Organization { Id = noIds ? 0 : i++, OrgType = OrgType.Producer, ParentOrgId=null, Code="NProd2", Name="Producer Org 2" },
             };
 
         return orgs;
     }
+   
     private List<Tag> GenDummyTags(bool noIds)
     {
         var i = 1;
@@ -120,6 +147,25 @@ public class AuthRDBLoader
                 new User { Id = noIds ? 0 : i++, EDIPI = 9211111111L, UserName="test2"},
                 new User { Id = noIds ? 0 : i++, EDIPI = 9333333333L, UserName="test3"},
             };
+    }
+
+    private List<NddsProgram> SampleProgramsFromASE(bool noIds)
+    {
+        int i = 1;
+        var progs = new List<NddsProgram>
+        {
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "APR-39A(V)2",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "APR-39C(V)2",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "AAR-47E(V)2",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "ALE-47 (Non-PWR PC)",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "ALE-47 (w/PWR PC) ",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "AN/AAQ-24B(V)27",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "ALR-56M",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "ALQ-157A(V)1",},
+            new NddsProgram{ Id = noIds ? 0 : i++, Name = "AAQ-24(B)V25",},
+        };
+
+        return progs;
     }
 
     private async Task AddUsersToOrgs()
