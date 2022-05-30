@@ -108,8 +108,6 @@ try
 
     builder.Services.AddAuthorization(o =>
     {;
-        o.AddPolicy("UserTest1", policy => policy.RequireClaim("preferred_username", "test1"));
-
         o.AddPolicy("FileMetaTestPolicy", policy =>
             policy.Requirements.Add(new MeetsPlatformRequirement())
             );

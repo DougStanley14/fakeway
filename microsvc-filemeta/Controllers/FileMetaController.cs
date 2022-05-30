@@ -18,8 +18,7 @@ namespace microsvc_filemeta.Controllers
             _authSvc = authorizationService;
         }
 
-        [Authorize(Roles = "Producer")]
-        [Authorize(Policy = "UserTest1")]
+        [Authorize(Roles = "Consumer")]
         [HttpGet]
         public IEnumerable<FileStuff> Get()
         {
@@ -40,7 +39,7 @@ namespace microsvc_filemeta.Controllers
             return $"Get: {id}";
         }
 
-        [Authorize(Roles = "Consumer")]
+        [Authorize(Roles = "Producer")]
         [HttpPost]
         public async Task<ActionResult<NDFileMeta>> Post([FromForm] NDFileMeta fileMeta)
         {

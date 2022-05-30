@@ -45,7 +45,7 @@ namespace microsvc_authr.Data
             mb.ApplyConfiguration(new NddsProgramConfig());
             mb.ApplyConfiguration(new TagConfig());
 
-            mb.SeedData();
+            // mb.SeedData(); // Turn on or off depending on need
         }
     }
 }

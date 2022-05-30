@@ -181,13 +181,16 @@ public class AuthRDBLoader
         var org4 = await db.Organizations.Where(s => s.Code == "SD2").SingleOrDefaultAsync();
         var org5 = await db.Organizations.Where(s => s.Code == "SE4").SingleOrDefaultAsync();
         var org6 = await db.Organizations.Where(s => s.Code == "GEY").SingleOrDefaultAsync();
+        var org7 = await db.Organizations.Where(s => s.Code == "CNS/ATM").SingleOrDefaultAsync();
+        var org8 = await db.Organizations.Where(s => s.Code == "NProd1").SingleOrDefaultAsync();
 
         var gpname = db.Organizations.GroupBy(x => x.Code).Select(g => g.Key).ToList();
 
         // User 1
         user1.Orgs.Add(org1);
         user1.Orgs.Add(org2);
-        user1.Orgs.Add(org3);
+        user1.Orgs.Add(org7);
+        user1.Orgs.Add(org8);
 
 
         // User 2
@@ -196,7 +199,7 @@ public class AuthRDBLoader
 
 
         // User 3
-        user3.Orgs.Add(org6);
+        user3.Orgs.Add(org8);
 
         await db.SaveChangesAsync();
     }
