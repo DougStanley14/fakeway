@@ -55,8 +55,6 @@ namespace microsvc_filemeta.Controllers
             {
                 return new ForbidResult();
             }
-
-            
         }
 
         [HttpPut("{id}")]

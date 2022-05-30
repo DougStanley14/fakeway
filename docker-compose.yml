@@ -25,6 +25,15 @@ services:
     volumes:
         - '${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets'
         - '${USERPROFILE}\.aspnet\https:/https'
+  microsvc-authr:
+    container_name: nexus-microsvc-authr
+    image: nexus-microsvc-authr
+    build: ./microsvc-authr
+    ports:
+        - '5030:80'
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+
 
   authrdb:
       image: postgres

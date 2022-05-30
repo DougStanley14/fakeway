@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using microsvc_authr;
 using microsvc_authr.Data;
@@ -10,11 +11,13 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Verbose()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)  // Throttles EF Logging
+                    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)  // Throttles EF Logging
                     .Enrich.FromLogContext()
                     .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
                     .Enrich.WithExceptionDetails()
@@ -24,6 +27,8 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    Log.Information($"ASPNETCORE_ENVIRONMENT - '{builder.Environment.EnvironmentName}'");
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -39,6 +44,8 @@ try
 
     }).AddJwtBearer(o =>
     {
+        Log.Information($"Jwt:Authority = '{builder.Configuration["Jwt:Authority"]}'");
+        Log.Information($"Jwt:Audience = '{builder.Configuration["Jwt:Audience"]}'");
 
         o.Authority = builder.Configuration["Jwt:Authority"]; // Currently From KeyCloak
         o.Audience = builder.Configuration["Jwt:Audience"];   // Currently From KeyCloak
@@ -63,13 +70,38 @@ try
                 }
 
                 return c.Response.WriteAsync("An error occured processing your authentication.");
+            },
+            OnMessageReceived = c =>
+            {
+                Log.Information($"JWT OnMessage Recieved {c.Token}");
+                Log.Information("Request Heads {@heads}", c.HttpContext.Request.Headers);
+
+                return Task.CompletedTask;
+            },
+            OnChallenge = c =>
+            {
+                Log.Information($"JWT OnChallenge {c.Scheme.Name}");
+                Log.Information("Request Heads {@heads}", c.HttpContext.Request.Headers);
+
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = c =>
+            {
+                //Log.Information("JWT Validated {@token}", c.SecurityToken);
+
+                var claims = ((JwtSecurityToken)c.SecurityToken).Claims.ToList();
+
+                claims.ForEach(c => Log.Information("Claim {@claimpair}", new { c.Type, c.Value }));
+
+                return Task.CompletedTask;
             }
         };
     });
 
     builder.Host.UseSerilog((ctx, lc) => lc
                 .MinimumLevel.Verbose()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)  // Throttles EF Logging
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)  // Throttles EF Logging
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console());
@@ -81,6 +113,7 @@ try
     {
         app.UseSwagger();
         app.UseSwaggerUI();
+        IdentityModelEventSource.ShowPII = true;
     }
 
     // app.UseHttpsRedirection();

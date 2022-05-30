@@ -4,8 +4,8 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=password&client_id=testapp&username=test1&password=test1
 
-### Get Test 1 AuthR Token
-get http://localhost:5038/api/Authorization/authorize
+### Get Test 1 AuthR Token (Tes1 EDIPI in AuthN Token)
+get http://localhost/api/Authorization/authorize
 Content-Type: application/json
 Authorization: bearer {{$dotenv Test1AuthNToken}}
 
@@ -16,7 +16,7 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=password&client_id=testapp&username=test2&password=test2
 
 ### Get Test 2 AuthR Token
-get http://localhost:5038/api/Authorization/authorize
+get http://localhost/api/Authorization/authorize
 Content-Type: application/json
 Authorization: bearer {{$dotenv Test2AuthNToken}}
 

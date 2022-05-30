@@ -46,6 +46,8 @@ public class AuthRDBLoader
 
         await GenDummyOrgPrograms();
 
+        await GenDummyOrgPlatforms();
+
         await db.SaveChangesAsync();
 
         var orgtags = await db.Organizations.Select(o => new
@@ -69,6 +71,27 @@ public class AuthRDBLoader
             foreach (var t in programset)
             {
                 org.Programs.Add(t);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        await db.SaveChangesAsync();
+    }
+    private async Task GenDummyOrgPlatforms()
+    {
+        var plats = await db.Platforms.ToArrayAsync();
+        var prodOrgs = await db.Organizations.Where(o => o.OrgType == OrgType.Producer).ToListAsync();
+
+        var rand = new Bogus.Randomizer();
+
+        foreach (var org in prodOrgs)
+        {
+            List<Platform> platset = rand.ArrayElements<Platform>(plats, rand.Int(0, plats.Count())).ToList();
+
+            foreach (var t in platset)
+            {
+                org.Platforms.Add(t);
             }
 
             await db.SaveChangesAsync();

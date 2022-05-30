@@ -15,6 +15,7 @@ using System.Text;
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Verbose()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
+                    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)  // Throttles EF Logging
                     .Enrich.FromLogContext()
                     .Enrich.WithExceptionDetails()
                     .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
@@ -101,8 +102,7 @@ try
                 claims.ForEach(c => Log.Information("Claim {@claimpair}", new { c.Type, c.Value }));
 
                 return Task.CompletedTask;
-            }
-            
+            } 
         };
     });
 
@@ -117,7 +117,8 @@ try
 
     builder.Host.UseSerilog((ctx, lc) => lc
                 .MinimumLevel.Verbose()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)  // Throttles EF Logging
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console());

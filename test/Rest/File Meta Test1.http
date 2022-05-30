@@ -2,10 +2,10 @@
 
 POST http://localhost:5178/api/FileMeta
 Content-Type: application/x-www-form-urlencoded
-Authorization: bearer {{$dotenv AuthRToken}}
+Authorization: bearer {{$dotenv Test1AuthRToken}}
 
 FileHash=23423lkjlkjlkj34233422
-&UserSecGroup=GE7
+&UserSecGroup=NProd1
 &Platform=F-35C
 
 ### File Meta Post Denied User:Test1
