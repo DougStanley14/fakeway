@@ -19,5 +19,6 @@ Users.Select( u => new {
 	u.UserName,
 	Orgs = u.Orgs.Select(o => $"{o.Code} {o.OrgType}"),
 	Plats = u.Orgs.SelectMany(o => o.Platforms.Select(p => $"{o.Code}: {p.Name}")),
-	Programs = u.Orgs.SelectMany(o => o.Programs.Select(p => $"{o.Code}: {p.Name}"))
+	Programs = u.Orgs.SelectMany(o => o.Programs.Select(p => $"{o.Code}: {p.Name}")),
+	Tags =  u.Orgs.SelectMany(o => o.Tags.Select(p => $"{o.Code}: {p.Name}"))
 })

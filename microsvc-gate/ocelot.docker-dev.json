@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/FileMeta",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5178
+        }
+      ],
+      "UpstreamPathTemplate": "/FileMeta",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
       "DownstreamPathTemplate": "/WeatherForecast",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -48,6 +60,9 @@
       "UpstreamPathTemplate": "/api/AuthR/{id}",
       "UpstreamHttpMethod": [ "Get" ]
     }
+  ],
+  "DelagatedHandlers": [
+    "AuthRHandler"
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5100"

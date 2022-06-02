@@ -15,7 +15,6 @@ using System.Text;
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Verbose()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
-                    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)  // Throttles EF Logging
                     .Enrich.FromLogContext()
                     .Enrich.WithExceptionDetails()
                     .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
@@ -47,20 +46,21 @@ try
         //o.Audience = builder.Configuration["Jwt:Audience"];
         //o.RequireHttpsMetadata = false;
         var sskeysecret = builder.Configuration["Jwt:TwoGuidSecret"];
+        //var sskeysecret = "{7445AF03-2612-4C82-A918-47215729FF9B}{41AAEA73-5C8C-4ADF-9A83-E6731FA00BF5}";
         o.TokenValidationParameters = new TokenValidationParameters
         {
+            //ValidateIssuer = false,
+            //ValidateAudience = false,
+            //ValidateIssuerSigningKey = false,
+            //ValidateLifetime = false,
+            //RequireExpirationTime = false,
+            //RequireSignedTokens = false
+
+            // The Real Stuff Prior to Ignore (above)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(sskeysecret)),
             ValidateIssuer = false,
             ValidateAudience = false
-
-            //ValidateAudience = false,
-            //TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("placeholder -key-that-is-long-enough-for-sha256")),
-            //ValidIssuer = "SydTestAuthR",
-            //ValidAudience = "NDDS",
-            //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("placeholder -key-that-is-long-enough-for-sha256")),
-            //ValidateLifetime = false,
-            //LifetimeValidator = LifetimeValidator
         };
 
         o.Events = new JwtBearerEvents
@@ -117,8 +117,7 @@ try
 
     builder.Host.UseSerilog((ctx, lc) => lc
                 .MinimumLevel.Verbose()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // Throttles EF Logging
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)  // Throttles EF Logging
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)  // TODO: Integrate Logging Levels with Config File
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console());
