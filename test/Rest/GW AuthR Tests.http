@@ -11,15 +11,26 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=password&client_id=testapp&username=test2&password=test2
 
 
+
 ### Get Test 1 File Meta Throuhg GW
 get http://localhost/FileMeta
 Content-Type: application/json
 Authorization: bearer {{$dotenv Test1AuthNToken}}
 
+### Get Test 1 Getting Test 1 User Profile
+get http://localhost/UserProfile/9111111111
+Content-Type: application/json
+Authorization: bearer {{$dotenv Test1AuthNToken}}
+
+### Get Test 1 Getting Test 2 User Profile
+get http://localhost/UserProfile/9211111111
+Content-Type: application/json
+Authorization: bearer {{$dotenv Test1AuthNToken}}
+
+
 ### Get Test 2 File Meta Throuhg GW
 get http://localhost/FileMeta
 Content-Type: application/json
 Authorization: bearer {{$dotenv Test2AuthNToken}}
-
 
 

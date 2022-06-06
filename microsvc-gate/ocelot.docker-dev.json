@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/UserProfile/{edipi}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5085
+        }
+      ],
+      "UpstreamPathTemplate": "/UserProfile/{edipi}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/FileMeta",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

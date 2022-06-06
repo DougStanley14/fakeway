@@ -32,7 +32,7 @@ namespace microsvc_filemeta.Controllers
             };
         }
 
-        [Authorize(Policy = "Consumer")]
+        [Authorize(Roles = "Consumer")]
         [HttpGet("{id}")]
         public string Get(int id)
         {

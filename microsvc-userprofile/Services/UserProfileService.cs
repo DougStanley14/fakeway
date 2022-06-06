@@ -135,10 +135,8 @@ namespace microsvc_userprofile.Services
 
             foreach (var org in usermeta.OrgClaimsMeta)
             {
-
                 org.Platforms.ForEach(p => claims.Add(new Claim("Platform", $"{org.OrgName}:{p}")));
                 org.Programs.ForEach(p => claims.Add(new Claim("Program", $"{org.OrgName}:{p}")));
-
             }
 
             return claims;
