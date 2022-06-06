@@ -6,10 +6,8 @@ using System.Collections;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
 using Microsoft.IdentityModel.Logging;
-using System.Security.Claims;
-using System.Text;
+using microsvc_gate.Services;
 
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Verbose()
@@ -29,10 +27,15 @@ try
     var theEnv = new DockerEnv(builder);
     Log.Information("Docker Env {@denv}", theEnv);
 
+    // Add App Settings
     builder.Configuration.AddJsonFile("appsettings.json", true, true);
     builder.Configuration.AddJsonFile($"appsettings.{theEnv.ConfigName}.json", true, true);
     builder.Configuration.AddJsonFile($"ocelot.{theEnv.ConfigName}.json");
 
+    // Register UserProfile Service Client
+    builder.Services.AddHttpClient<IUserProfileClient, UserProfileClient>();
+
+    // Add AuthN and Validation for Jwt Bearer from Keycloak
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -107,8 +110,6 @@ try
 
     Log.Information($"Configuring Ocelot with ocelot.{builder.Environment.EnvironmentName}.json");
 
-    //builder.Services.AddEndpointsApiExplorer();
-    //builder.Services.AddSwaggerGen();
     builder.Services.AddOcelot()
                     .AddDelegatingHandler<AuthRHandler>(true);
 
@@ -122,6 +123,7 @@ try
 
     IdentityModelEventSource.ShowPII = true;
 
+    app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseOcelot().Wait();
 
@@ -132,6 +134,11 @@ catch (Exception ex)
 {
     Log.Fatal(ex, "App Failed to Start");
 }
+finally
+{
+    Log.CloseAndFlush();
+}
+
 
 void LogCriticalVars()
 {
@@ -171,57 +178,4 @@ public class DockerEnv
     public string? ConfigName { get; set; }
     public string? CertPath { get; set; }
     public string? CertPassword { get; set; }
-}
-
-public class AuthRHandler: DelegatingHandler
-{
-    private readonly IHttpContextAccessor _httpCtx;
-
-    public AuthRHandler(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpCtx = httpContextAccessor;
-
-        var user = _httpCtx.HttpContext.User;
-
-    }
-
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-        IEnumerable<string> headerValues;
-        if (request.Headers.TryGetValues("Authorization", out headerValues))
-        {
-            string accessToken = GenerateToken(_httpCtx.HttpContext.User);
-
-
-            request.Headers.Remove("Authorization");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            
-        }
-
-        return await base.SendAsync(request, cancellationToken);
-    }
-
-    private string GenerateToken(ClaimsPrincipal user)
-    {
-        string sskSecret = "{7445AF03-2612-4C82-A918-47215729FF9B}{41AAEA73-5C8C-4ADF-9A83-E6731FA00BF5}";
-        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(sskSecret));
-        var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-        var expirationDate = DateTime.UtcNow.AddDays(2);
-
-        //var claims = await GetUserClaims(userName, edipi);
-
-        var claims = new List<Claim> {
-                new Claim("AuthR", "Good"),
-            };
-
-        var jwt = new JwtSecurityToken(issuer: "NDDS",
-                                       audience: "NDDS",
-                                       claims: claims,
-                                       expires: expirationDate,
-                                       signingCredentials: signingCredentials);
-
-        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-        return encodedJwt;
-    }
 }

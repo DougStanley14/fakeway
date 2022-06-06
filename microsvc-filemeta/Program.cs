@@ -31,7 +31,6 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    //builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -40,22 +39,9 @@ try
 
     }).AddJwtBearer(o =>
     {
-        //o.Authority = builder.Configuration["Jwt:Authority"];//http://localhost:5038/api/Authorization/verify
-        //o.Authority = "http://localhost:5038/api/Authorization/verify";
-        //o.Audience = "NDDS";
-        //o.Audience = builder.Configuration["Jwt:Audience"];
-        //o.RequireHttpsMetadata = false;
         var sskeysecret = builder.Configuration["Jwt:TwoGuidSecret"];
-        //var sskeysecret = "{7445AF03-2612-4C82-A918-47215729FF9B}{41AAEA73-5C8C-4ADF-9A83-E6731FA00BF5}";
         o.TokenValidationParameters = new TokenValidationParameters
         {
-            //ValidateIssuer = false,
-            //ValidateAudience = false,
-            //ValidateIssuerSigningKey = false,
-            //ValidateLifetime = false,
-            //RequireExpirationTime = false,
-            //RequireSignedTokens = false
-
             // The Real Stuff Prior to Ignore (above)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(sskeysecret)),
@@ -102,7 +88,7 @@ try
                 claims.ForEach(c => Log.Information("Claim {@claimpair}", new { c.Type, c.Value }));
 
                 return Task.CompletedTask;
-            } 
+            }
         };
     });
 

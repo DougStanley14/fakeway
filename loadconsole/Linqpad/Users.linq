@@ -17,8 +17,9 @@
 Users.Select( u => new {
 	u.EDIPI,
 	u.UserName,
-	Orgs = u.Orgs.Select(o => $"{o.Code} {o.OrgType}"),
+	Orgs = u.Orgs.Select(o => $"{o.Code} {o.Name} {o.OrgType}"),
 	Plats = u.Orgs.SelectMany(o => o.Platforms.Select(p => $"{o.Code}: {p.Name}")),
 	Programs = u.Orgs.SelectMany(o => o.Programs.Select(p => $"{o.Code}: {p.Name}")),
-	Tags =  u.Orgs.SelectMany(o => o.Tags.Select(p => $"{o.Code}: {p.Name}"))
+	Tags =  u.Orgs.SelectMany(o => o.Tags.Select(p => $"{o.Code}: {p.Name}")),
+	Bunos = u.Orgs.SelectMany(o => o.Platforms.SelectMany(p => p.Bunos.Select(b => $"{o.Code}: {b.BunoCode}")))
 })
