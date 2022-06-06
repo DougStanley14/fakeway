@@ -35,6 +35,9 @@ try
     // Register UserProfile Service Client
     builder.Services.AddHttpClient<IUserProfileClient, UserProfileClient>();
 
+    // Add InMem Cache for AuthR Tokens
+    builder.Services.AddMemoryCache();
+
     // Add AuthN and Validation for Jwt Bearer from Keycloak
     builder.Services.AddAuthentication(options =>
     {
