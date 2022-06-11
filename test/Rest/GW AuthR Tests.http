@@ -18,7 +18,7 @@ Content-Type: application/json
 Authorization: bearer {{$dotenv Test1AuthNToken}}
 
 ### Get Test 1 Getting Test 1 User Profile
-get http://localhost/UserProfile/9111111111
+get http://localhost/api/UserProfile/9111111111
 Content-Type: application/json
 Authorization: bearer {{$dotenv Test1AuthNToken}}
 

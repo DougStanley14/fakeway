@@ -9,7 +9,7 @@
           "Port": 5085
         }
       ],
-      "UpstreamPathTemplate": "/UserProfile/{edipi}",
+      "UpstreamPathTemplate": "/api/UserProfile/{edipi}",
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
