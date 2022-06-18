@@ -15,6 +15,8 @@ namespace microsvc_userprofile.Model
         public DateTime QtrEndDate { get; set; }
         public int PlatformId { get; set; }
         public virtual Platform Platform { get; set; }
+        public int? OrganizationId { get; set; }
+        public virtual Organization? Organization { get; set; }
     }
     public class BunoConfig : IEntityTypeConfiguration<Buno>
     {
@@ -28,6 +30,11 @@ namespace microsvc_userprofile.Model
             builder.HasOne(d => d.Platform)
                        .WithMany(p => p.Bunos)
                        .HasForeignKey(d => d.PlatformId)
+                       .OnDelete(DeleteBehavior.ClientSetNull);
+            
+            builder.HasOne(d => d.Organization)
+                       .WithMany(p => p.Bunos)
+                       .HasForeignKey(d => d.OrganizationId)
                        .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }

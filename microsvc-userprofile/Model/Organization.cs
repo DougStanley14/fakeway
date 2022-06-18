@@ -26,6 +26,7 @@ namespace microsvc_userprofile.Model
         public int? ParentOrgId { get; set; }
         public virtual ParentOrg? ParentOrg { get; set; }
         public virtual ICollection<Platform> Platforms { get; set; }
+        public virtual ICollection<Buno> Bunos { get; set; }
         public virtual ICollection<NddsProgram> Programs { get; set; }
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }

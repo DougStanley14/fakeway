@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using microsvc_authr.Data;
-using microsvc_authr.Model;
+using microsvc_userprofile.Data;
+
 
 // Mainly to have a non InMem DB to write Queries against
 // Also for Testing Postgres

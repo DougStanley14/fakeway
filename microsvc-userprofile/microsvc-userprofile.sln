@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "microsvc-userprofile", "microsvc-userprofile.csproj", "{72660DFF-2F0B-44F9-BF7E-A4A4B850EDD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "microsvc-userprofile", "microsvc-userprofile.csproj", "{72660DFF-2F0B-44F9-BF7E-A4A4B850EDD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "loadconsole", "..\loadconsole\loadconsole.csproj", "{36291B4F-9638-4059-BDBA-B794DCF77103}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{72660DFF-2F0B-44F9-BF7E-A4A4B850EDD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72660DFF-2F0B-44F9-BF7E-A4A4B850EDD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72660DFF-2F0B-44F9-BF7E-A4A4B850EDD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36291B4F-9638-4059-BDBA-B794DCF77103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36291B4F-9638-4059-BDBA-B794DCF77103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36291B4F-9638-4059-BDBA-B794DCF77103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36291B4F-9638-4059-BDBA-B794DCF77103}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

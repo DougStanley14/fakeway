@@ -35,18 +35,25 @@ services:
         - ASPNETCORE_ENVIRONMENT=Development
 
 
-  authrdb:
-      image: postgres
-      container_name: authrdb
-      ports:
-       - 5433:5433
-      volumes:
-        - authr_data:/var/lib/postgresql/data
-      environment:
-        POSTGRES_DB: nddsauthr
-        POSTGRES_USER: authr
-        POSTGRES_PASSWORD: authr
-      command: -p 5433
+  userdb:
+    image: postgres
+    container_name: userdb
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - APP_DB_USER=docker
+      - APP_DB_PASS=docker
+      - APP_DB_NAME=docker
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - 5436:5432
   
   microsvcfilemeta:
     image: microsvc-filemeta

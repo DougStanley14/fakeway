@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\microsvc-authr\microsvc-authr.csproj" />
+    <ProjectReference Include="..\microsvc-userprofile\microsvc-userprofile.csproj" />
   </ItemGroup>
 
   <ItemGroup>
