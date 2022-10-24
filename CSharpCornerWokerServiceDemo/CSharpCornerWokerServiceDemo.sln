@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpCornerWokerServiceDemo", "CSharpCornerWokerServiceDemo\CSharpCornerWokerServiceDemo.csproj", "{5D494A58-7FFA-46F7-82C0-52270A2704D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpWorkerService", "CSharpWorkerService\CSharpWorkerService.csproj", "{4425E070-336C-43CE-87C0-CD21010ED316}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D494A58-7FFA-46F7-82C0-52270A2704D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D494A58-7FFA-46F7-82C0-52270A2704D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D494A58-7FFA-46F7-82C0-52270A2704D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D494A58-7FFA-46F7-82C0-52270A2704D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4425E070-336C-43CE-87C0-CD21010ED316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4425E070-336C-43CE-87C0-CD21010ED316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4425E070-336C-43CE-87C0-CD21010ED316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4425E070-336C-43CE-87C0-CD21010ED316}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50D2DAD1-FFDE-4C18-92EB-7A9E0F87148D}
+	EndGlobalSection
+EndGlobal
